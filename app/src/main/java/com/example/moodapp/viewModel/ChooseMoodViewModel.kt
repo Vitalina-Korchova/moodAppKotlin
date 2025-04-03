@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter
 
 class ChooseMoodViewModel : ViewModel() {
 
+    // визначає, які дані зберігає ViewModel для керування станом екрана настрою
     data class MoodState(
         val currentDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
         val selectedMood: String? = null,
@@ -25,14 +26,14 @@ class ChooseMoodViewModel : ViewModel() {
     )
 
     sealed class MoodEvent {
-        data class MoodSelected(val mood: String) : MoodEvent()
+        data class MoodSelected(val mood: String) : MoodEvent() //вибір настрою
         object SaveButtonClicked : MoodEvent()
         object NavigationHandled : MoodEvent()
     }
 
     private val _state = MutableStateFlow(MoodState())
 
-    val state: StateFlow<MoodState> = _state.asStateFlow()
+    val state: StateFlow<MoodState> = _state.asStateFlow() //надає можливітсь зчитувати
 
     fun onEvent(event: MoodEvent) {
         when (event) {

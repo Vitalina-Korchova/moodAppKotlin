@@ -1,5 +1,6 @@
 package com.example.moodapp.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moodapp.model.MoodEntry
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class HistoryMoodViewModel : ViewModel() {
 
-    // 1. State - представляє стан UI
+    //State
     data class HistoryState(
         val allEntries: List<MoodEntry> = emptyList(),
         val filteredEntries: List<MoodEntry> = emptyList(),
@@ -21,26 +22,30 @@ class HistoryMoodViewModel : ViewModel() {
         val moodOptions: List<String> = listOf("All", "Happy", "Good", "Neutral", "Sad", "Bad"),
         val isDropdownExpanded: Boolean = false,
         val areFiltersExpanded: Boolean = false,
-        val isLoading: Boolean = true
+        val isLoading: Boolean = true, //Чи завантажуються дані
+        val isUpdating: Boolean = false, // Стан оновлення запису
+        val selectedEntry: MoodEntry? = null // Вибраний запис для редагування
     )
 
-    // 2. Events - взаємодії користувача
+    //    визначає взаємодії юзера з UI
     sealed class HistoryEvent {
         data class SearchTextChanged(val text: String) : HistoryEvent()
         data class MoodFilterSelected(val mood: String) : HistoryEvent()
         object ToggleDropdown : HistoryEvent()
         object ToggleFiltersSection : HistoryEvent()
         object ClearFilters : HistoryEvent()
+        data class SelectEntry(val entry: MoodEntry) : HistoryEvent() // вибір запису для редагування
+        object CancelUpdate : HistoryEvent() // скасування редагування
+        data class UpdateEntry(val updatedEntry: MoodEntry) : HistoryEvent() // оновлення запису
+        data class DeleteEntry(val entryId: String) : HistoryEvent() // видалення запису
     }
 
-    // Внутрішній змінний стан
+    //внутрішній стан, який можна змінювати
     private val _state = MutableStateFlow(HistoryState())
 
-    // Відкритий незмінний стан
     val state: StateFlow<HistoryState> = _state.asStateFlow()
 
     init {
-        // Завантаження записів про настрій з репозиторію під час створення ViewModel
         loadMoodEntries()
     }
 
@@ -56,7 +61,7 @@ class HistoryMoodViewModel : ViewModel() {
         }
     }
 
-    // 3. Actions - функції, що виконують зміни стану
+    //  Actions
     private fun setSearchText(text: String) {
         _state.value = _state.value.copy(
             searchText = text,
@@ -92,7 +97,53 @@ class HistoryMoodViewModel : ViewModel() {
         )
     }
 
-    // Обробник подій
+    // вибір запису для редагування
+    private fun selectEntry(entry: MoodEntry) {
+        _state.value = _state.value.copy(
+            selectedEntry = entry
+        )
+    }
+
+    // скасування редагування
+    private fun cancelUpdate() {
+        _state.value = _state.value.copy(
+            selectedEntry = null
+        )
+    }
+
+    // оновлення запису настрою
+    private fun updateEntry(updatedEntry: MoodEntry) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isUpdating = true)
+
+            try {
+                MoodRepository.updateMoodEntry(updatedEntry)
+
+                _state.value = _state.value.copy(
+                    selectedEntry = null,
+                    isUpdating = false
+                )
+            } catch (e: Exception) {
+
+                _state.value = _state.value.copy(isUpdating = false)
+
+            }
+        }
+    }
+
+    // видалення запису настрою
+    private fun deleteEntry(entryId: String) {
+        viewModelScope.launch {
+            try {
+                MoodRepository.deleteMoodEntry(entryId)
+
+            } catch (e: Exception) {
+                Log.d("Error", "Error  Delete Mood")
+            }
+        }
+    }
+
+
     fun onEvent(event: HistoryEvent) {
         when (event) {
             is HistoryEvent.SearchTextChanged -> setSearchText(event.text)
@@ -100,6 +151,10 @@ class HistoryMoodViewModel : ViewModel() {
             is HistoryEvent.ToggleDropdown -> toggleDropdown()
             is HistoryEvent.ToggleFiltersSection -> toggleFiltersSection()
             is HistoryEvent.ClearFilters -> clearFilters()
+            is HistoryEvent.SelectEntry -> selectEntry(event.entry)
+            is HistoryEvent.CancelUpdate -> cancelUpdate()
+            is HistoryEvent.UpdateEntry -> updateEntry(event.updatedEntry)
+            is HistoryEvent.DeleteEntry -> deleteEntry(event.entryId)
         }
     }
 

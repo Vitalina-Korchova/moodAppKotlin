@@ -37,13 +37,11 @@ fun ActivitiesMood(
     navController: NavController,
     viewModel: ActivitiesMoodViewModel = viewModel()
 ) {
-    // Collect StateFlow as state
+
     val state by viewModel.state.collectAsState()
 
-    // Check if navigation should happen
     if (state.isNavigateToHistory) {
         navController.navigate("history_mood")
-        // Notify the ViewModel that navigation was handled
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.NavigationHandled)
     }
 
@@ -89,7 +87,7 @@ fun ActivitiesMood(
                             )
                             .background(backgroundColor, shape = RoundedCornerShape(8.dp))
                             .clickable {
-                                // Send event to ViewModel when activity is toggled
+
                                 viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(activity))
                             }
                             .padding(horizontal = 8.dp, vertical = 8.dp),

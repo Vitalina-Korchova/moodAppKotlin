@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 object UserRepository {
     private val _userState = MutableStateFlow<User?>(null)
-    val userState: StateFlow<User?> = _userState
+
 
     // Дефолтний юзер
     private val defaultUser = User(
@@ -23,7 +23,7 @@ object UserRepository {
     // Реєстрація нового юзера
     fun registerUser(id: Int, login: String, dateOfBirth: String, password: String): Boolean {
         if (login.isNotEmpty() && password.isNotEmpty() && dateOfBirth.isNotEmpty()) {
-            _userState.value = User(id, login, dateOfBirth, password) // Зберігаємо нового користувача
+            _userState.value = User(id, login, dateOfBirth, password)
             return true
         }
         return false

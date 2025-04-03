@@ -48,11 +48,11 @@ class ProfileViewModel : ViewModel() {
             try {
                 _uiState.value = _uiState.value.copy(isLoading = true)
 
-                // Fetch user from repository
+
                 val user = userRepository.getUser()
 
                 if (user != null) {
-                    // Format date of birth from repository format (YYYY-MM-DD) to more readable format
+
                     val formattedDate = try {
                         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                         val outputFormat = SimpleDateFormat("d MMMM yyyy", Locale.getDefault())
@@ -65,9 +65,9 @@ class ProfileViewModel : ViewModel() {
                     val profileData = UserProfileData(
                         username = user.login,
                         dateOfBirth = formattedDate,
-                        region = "Ukraine", // Default or could be stored in User model
-                        language = "English", // Default or could be stored in User model
-                        notificationsEnabled = true // Default or could be stored in User model
+                        region = "Ukraine",
+                        language = "English",
+                        notificationsEnabled = true
                     )
 
                     _uiState.value = _uiState.value.copy(

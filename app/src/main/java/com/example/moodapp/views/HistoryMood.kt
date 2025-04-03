@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -23,7 +25,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -31,13 +36,18 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -58,10 +68,7 @@ fun HistoryMood(
     navController: NavController,
     viewModel: HistoryMoodViewModel = viewModel()
 ) {
-    // Collect state from ViewModel
     val state by viewModel.state.collectAsState()
-
-    // Animation for filter section expansion
     val rotationState by animateFloatAsState(
         targetValue = if (state.areFiltersExpanded) 180f else 0f,
         label = "Rotation Animation"
@@ -86,7 +93,6 @@ fun HistoryMood(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
-                // Filters card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -102,12 +108,10 @@ fun HistoryMood(
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
-                        // Filter section header with toggle
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    // Using ViewModel event to toggle filters
                                     viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.ToggleFiltersSection)
                                 },
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -128,7 +132,6 @@ fun HistoryMood(
                             )
                         }
 
-                        // Animated filter content
                         AnimatedVisibility(
                             visible = state.areFiltersExpanded,
                             enter = expandVertically(),
@@ -139,11 +142,9 @@ fun HistoryMood(
                                     .fillMaxWidth()
                                     .padding(top = 12.dp)
                             ) {
-                                // Activity search field
                                 OutlinedTextField(
                                     value = state.searchText,
                                     onValueChange = { text ->
-                                        // Using ViewModel event for text changes
                                         viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.SearchTextChanged(text))
                                     },
                                     label = { Text("Search activities") },
@@ -153,7 +154,6 @@ fun HistoryMood(
                                     trailingIcon = {
                                         if (state.searchText.isNotEmpty()) {
                                             IconButton(onClick = {
-                                                // Using ViewModel event to clear text
                                                 viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.SearchTextChanged(""))
                                             }) {
                                                 Icon(
@@ -165,7 +165,6 @@ fun HistoryMood(
                                     }
                                 )
 
-                                // Mood dropdown
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -179,7 +178,6 @@ fun HistoryMood(
                                         readOnly = true,
                                         trailingIcon = {
                                             IconButton(onClick = {
-                                                // Using ViewModel event to toggle dropdown
                                                 viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.ToggleDropdown)
                                             }) {
                                                 Icon(
@@ -194,23 +192,19 @@ fun HistoryMood(
                                         }
                                     )
 
-                                    // Dropdown menu for mood options
                                     DropdownMenu(
                                         expanded = state.isDropdownExpanded,
                                         onDismissRequest = {
-                                            // Using ViewModel event to close dropdown
                                             viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.ToggleDropdown)
                                         },
                                         modifier = Modifier
                                             .fillMaxWidth(0.9f)
                                             .background(Color.White)
                                     ) {
-                                        // Using the mood options from ViewModel state
                                         state.moodOptions.forEach { mood ->
                                             DropdownMenuItem(
                                                 text = { Text(mood) },
                                                 onClick = {
-                                                    // Using ViewModel event to select mood
                                                     viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.MoodFilterSelected(mood))
                                                 }
                                             )
@@ -218,10 +212,9 @@ fun HistoryMood(
                                     }
                                 }
 
-                                // Clear filters button
+                                // Clear filters
                                 Button(
                                     onClick = {
-                                        // Using ViewModel event to clear all filters
                                         viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.ClearFilters)
                                     },
                                     colors = ButtonDefaults.buttonColors(
@@ -236,7 +229,17 @@ fun HistoryMood(
                     }
                 }
 
-                // Display content based on filtered entries from ViewModel state
+                // показую діалог редагування, якщо є вибраний запис
+                state.selectedEntry?.let { entry ->
+                    EditMoodDialog(
+                        entry = entry,
+                        onDismiss = { viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.CancelUpdate) },
+                        onUpdate = { updatedEntry ->
+                            viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.UpdateEntry(updatedEntry))
+                        }
+                    )
+                }
+
                 if (state.filteredEntries.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -261,7 +264,6 @@ fun HistoryMood(
 
                             Button(
                                 onClick = {
-                                    // Using ViewModel events to clear filters and expand filter section
                                     viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.ClearFilters)
                                     viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.ToggleFiltersSection)
                                 },
@@ -275,12 +277,19 @@ fun HistoryMood(
                         }
                     }
                 } else {
-                    // List of mood entries using the filteredEntries from ViewModel state
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(state.filteredEntries) { entry ->
-                            MoodCard(entry)
+                            MoodCard(
+                                entry = entry,
+                                onEditClick = {
+                                    viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.SelectEntry(entry))
+                                },
+                                onDeleteClick = {
+                                    viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.DeleteEntry(entry.id))
+                                }
+                            )
                         }
                     }
                 }
@@ -289,8 +298,15 @@ fun HistoryMood(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoodCard(entry: MoodEntry) {
+fun MoodCard(
+    entry: MoodEntry,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -306,17 +322,50 @@ fun MoodCard(entry: MoodEntry) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Date
-            Text(
-                text = entry.date,
-                fontSize = 12.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            // Date & Actions Row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Date
+                Text(
+                    text = entry.date,
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+
+                // Action buttons
+                Row {
+                    IconButton(
+                        onClick = onEditClick,
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit mood entry",
+                            tint = customPurple
+                        )
+                    }
+
+                    IconButton(
+                        onClick = { showDeleteConfirmation = true },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete mood entry",
+                            tint = Color.Red
+                        )
+                    }
+                }
+            }
 
             // Mood and image row
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
@@ -382,4 +431,167 @@ fun MoodCard(entry: MoodEntry) {
             }
         }
     }
+
+    // Діалог підтвердження видалення
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmation = false },
+            title = { Text("Delete Mood Entry") },
+            text = { Text("Are you sure you want to delete this mood entry? This action cannot be undone.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDeleteClick()
+                        showDeleteConfirmation = false
+                    }
+                ) {
+                    Text("Delete", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteConfirmation = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun EditMoodDialog(
+    entry: MoodEntry,
+    onDismiss: () -> Unit,
+    onUpdate: (MoodEntry) -> Unit
+) {
+    var selectedMood by remember { mutableStateOf(entry.mood) }
+    var activitiesText by remember { mutableStateOf(entry.activities.joinToString(", ")) }
+    var showMoodDropdown by remember { mutableStateOf(false) }
+    val moodOptions = listOf("Happy", "Good", "Neutral", "Sad", "Bad")
+
+    // Функція для отримання ресурсу зображення відповідно до настрою
+    fun getMoodImageResource(mood: String): Int {
+        return when (mood) {
+            "Happy" -> com.example.moodapp.R.drawable.icon_happy_mood
+            "Good" -> com.example.moodapp.R.drawable.icon_good_mood
+            "Neutral" -> com.example.moodapp.R.drawable.icon_neutral_mood
+            "Sad" -> com.example.moodapp.R.drawable.icon_sad_mood
+            "Bad" -> com.example.moodapp.R.drawable.icon_bad_mood
+            else -> com.example.moodapp.R.drawable.icon_neutral_mood
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Edit Mood Entry") },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text(
+                    text = "Date: ${entry.date}",
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                // Mood selection
+                Text(
+                    text = "Select Mood:",
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Button(
+                        onClick = { showMoodDropdown = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = customPurple
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = getMoodImageResource(selectedMood)),
+                                contentDescription = "Selected mood",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(selectedMood)
+                        }
+                    }
+
+                    DropdownMenu(
+                        expanded = showMoodDropdown,
+                        onDismissRequest = { showMoodDropdown = false },
+                        modifier = Modifier.fillMaxWidth(0.9f)
+                    ) {
+                        moodOptions.forEach { mood ->
+                            DropdownMenuItem(
+                                text = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Image(
+                                            painter = painterResource(id = getMoodImageResource(mood)),
+                                            contentDescription = mood,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(mood)
+                                    }
+                                },
+                                onClick = {
+                                    selectedMood = mood
+                                    showMoodDropdown = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Activities input
+                Text(
+                    text = "Activities (comma separated):",
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                OutlinedTextField(
+                    value = activitiesText,
+                    onValueChange = { activitiesText = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Reading, Walking, etc.") }
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    // Створення оновленого запису
+                    val updatedEntry = entry.copy(
+                        mood = selectedMood,
+                        moodImageResId = getMoodImageResource(selectedMood),
+                        activities = activitiesText.split(",")
+                            .map { it.trim() }
+                            .filter { it.isNotEmpty() }
+                    )
+                    onUpdate(updatedEntry)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = customPurple
+                )
+            ) {
+                Text("Update")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }

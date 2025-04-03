@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 
 class RegistrationViewModel : ViewModel() {
 
+    //MutableStateFlow для збереження стану полів
     private val _login = MutableStateFlow("")
     val login: StateFlow<String> = _login
 

@@ -134,21 +134,21 @@ fun Profile(
                 icon = Icons.Default.Place,
                 title = "Region",
                 subtitle = uiState.profileData.region,
-                onClick = { /* Navigate to region selection */ }
+                onClick = {  }
             )
 
             SettingsItem(
                 icon = Icons.Default.Info,
                 title = "Language",
                 subtitle = uiState.profileData.language,
-                onClick = { /* Navigate to language selection */ }
+                onClick = {  }
             )
 
             SettingsItem(
                 icon = Icons.Default.Notifications,
                 title = "Notifications",
                 subtitle = if (uiState.profileData.notificationsEnabled) "On" else "Off",
-                onClick = { /* Navigate to notification settings */ }
+                onClick = { }
             )
         }
 

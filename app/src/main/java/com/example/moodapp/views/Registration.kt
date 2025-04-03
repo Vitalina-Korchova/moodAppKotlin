@@ -32,6 +32,7 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
     val isPrivacyAccepted by viewModel.isPrivacyAccepted.collectAsState()
     val isRegistered by viewModel.isRegistered.collectAsState()
 
+    //для виклику асинхронної функції viewModel.registerUser(), коли користувач натисне кнопку Sign Up
     val coroutineScope = rememberCoroutineScope()
 
     // перехід на екран входу при успішній реєстрації
