@@ -39,23 +39,21 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import android.annotation.SuppressLint
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun ChooseMood(
     navController: NavController,
+    windowSizeClass: WindowSizeClass,
     viewModel: ChooseMoodViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
-    // Get window size class for adaptive UI
-    val activity = LocalContext.current as? ComponentActivity
-    val windowSizeClass = activity?.let { calculateWindowSizeClass(it) }
-    val isTablet = windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Expanded ||
-            windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Medium
+    val isTablet = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
+            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium
 
-    // Adaptive sizing based on device type
     val titleFontSize = if (isTablet) 32.sp else 24.sp
     val dateFontSize = if (isTablet) 20.sp else 16.sp
     val moodIconSize = if (isTablet) 80.dp else 52.dp

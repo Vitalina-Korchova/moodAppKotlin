@@ -26,34 +26,39 @@ import com.example.moodapp.views.Authorization
 import com.example.moodapp.views.BottomNavigation
 import com.example.moodapp.views.ChooseMood
 import com.example.moodapp.views.HistoryMood
+import com.example.moodapp.views.MoodTips
 import com.example.moodapp.views.Profile
 import com.example.moodapp.views.Registration
 import com.example.moodapp.views.SideNavigation
 
 class MainActivity : ComponentActivity() {
+
     private val TAG = "MainActivity"
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate: Активність створена")
+        Log.d(TAG, "onCreate: Activity created")
+
         setContent {
             MoodAppTheme {
                 val navController = rememberNavController()
                 val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
                 val windowSizeClass = calculateWindowSizeClass(this)
-                val routesWithNav = listOf("history_mood", "profile")
-                val showNav = currentDestination in routesWithNav
+
+                val routesWithNav = listOf("history_mood", "profile", "tips_mood")
+                val showNavigation = currentDestination in routesWithNav
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        if (showNav && windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+                        if (showNavigation && windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
                             BottomNavigation(navController = navController)
                         }
                     }
                 ) { innerPadding ->
                     Row(modifier = Modifier.padding(innerPadding)) {
-                        if (showNav && windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
+                        if (showNavigation && windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
                             SideNavigation(navController = navController)
                         }
 
@@ -64,29 +69,32 @@ class MainActivity : ComponentActivity() {
                                 .weight(1f)
                                 .fillMaxHeight()
                         ) {
-                        composable("choose_mood") {
-                            ChooseMood(navController)
-                        }
-                        composable("activities_mood") {
-                            ActivitiesMood(navController)
-                        }
-                        composable("history_mood"){
-                            HistoryMood(navController)
-                        }
-                        composable("signin_screen"){
-                            Authorization(navController)
-                        }
-                        composable("signup_screen"){
-                            Registration(navController)
-                        }
-                        composable("profile") {
-                            Profile(navController)
+                            composable("choose_mood") {
+                                ChooseMood(navController, windowSizeClass)
+                            }
+                            composable("activities_mood") {
+                                ActivitiesMood(navController, windowSizeClass)
+                            }
+                            composable("history_mood") {
+                                HistoryMood(navController,windowSizeClass)
+                            }
+                            composable("signin_screen") {
+                                Authorization(navController)
+                            }
+                            composable("signup_screen") {
+                                Registration(navController )
+                            }
+                            composable("profile") {
+                                Profile(navController, windowSizeClass)
+                            }
+                            composable("tips_mood"){
+                                MoodTips(windowSizeClass)
+                            }
                         }
                     }
                 }
             }
         }
-      }
     }
 }
 

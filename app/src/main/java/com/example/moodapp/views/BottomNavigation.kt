@@ -26,7 +26,7 @@ fun BottomNavigation(navController: NavController) {
             modifier = Modifier.height(35.dp),
             containerColor = Color.Transparent
         ) {
-            val items = listOf(Screen.HistoryMood, Screen.Profile)
+            val items = listOf(Screen.HistoryMood, Screen.Profile, Screen.MoodTips)
 
             items.forEach { screen ->
                 NavigationBarItem(
@@ -59,15 +59,18 @@ fun SideNavigation(navController: NavController) {
     NavigationRail(
         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
     ) {
-        val items = listOf(Screen.HistoryMood, Screen.Profile)
+        val items = listOf(Screen.HistoryMood, Screen.Profile, Screen.MoodTips)
 
         items.forEach { screen ->
             NavigationRailItem(
                 icon = {
                     Row(
-
+                        modifier = Modifier
+                            .width(120.dp)
+                            .padding(start = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.Start
+
                     ) {
                         Icon(
                             painter = painterResource(id = screen.icon),
@@ -101,4 +104,5 @@ fun SideNavigation(navController: NavController) {
 sealed class Screen(val route: String, val icon: Int, val label: String) {
     object HistoryMood : Screen("history_mood", R.drawable.icon_history, "History")
     object Profile : Screen("profile", R.drawable.icon_profile, "Profile")
+    object MoodTips : Screen("tips_mood", R.drawable.icon_tips, "MoodTips")
 }

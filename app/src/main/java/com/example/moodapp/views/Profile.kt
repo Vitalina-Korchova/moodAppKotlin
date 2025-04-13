@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,24 +24,22 @@ import androidx.navigation.NavController
 import com.example.moodapp.R
 import com.example.moodapp.viewmodels.ProfileViewModel
 
-import androidx.compose.ui.platform.LocalContext
-
-import androidx.activity.ComponentActivity
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun Profile(
     navController: NavController,
+    windowSizeClass: WindowSizeClass,
     viewModel: ProfileViewModel = viewModel()
 ) {
-    val activity = LocalContext.current as? ComponentActivity
-    val windowSizeClass = activity?.let { calculateWindowSizeClass(it) }
-    val isWideScreen = windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Expanded||
-            windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Medium
+    val isWideScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
+    windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium
+
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState()
 

@@ -36,6 +36,7 @@ import com.example.moodapp.viewModel.ActivitiesMoodViewModel
 
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 
@@ -44,17 +45,16 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 @Composable
 fun ActivitiesMood(
     navController: NavController,
+    windowSizeClass: WindowSizeClass, // Передаємо WindowSizeClass
     viewModel: ActivitiesMoodViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
-    // Get window size class for adaptive UI
-    val activity = LocalContext.current as? ComponentActivity
-    val windowSizeClass = activity?.let { calculateWindowSizeClass(it) }
-    val isTablet = windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Expanded ||
-            windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Medium
+    // Адаптивність на основі WindowSizeClass
+    val isTablet = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
+            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium
 
-    // Adaptive sizing based on device type
+    // Параметри адаптивності
     val titleFontSize = if (isTablet) 32.sp else 24.sp
     val activityTextSize = if (isTablet) 18.sp else 14.sp
     val buttonTextSize = if (isTablet) 24.sp else 20.sp
@@ -66,7 +66,7 @@ fun ActivitiesMood(
     val buttonWidth = if (isTablet) 200.dp else 150.dp
     val buttonCornerRadius = if (isTablet) 20.dp else 16.dp
     val buttonElevation = if (isTablet) 12.dp else 8.dp
-    val gridCellCount = if (isTablet) 3 else 3 // More columns on tablet
+    val gridCellCount = if (isTablet) 3 else 3 // Більше колонок на планшеті
 
     if (state.isNavigateToHistory) {
         navController.navigate("history_mood")

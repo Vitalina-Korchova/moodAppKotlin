@@ -43,6 +43,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,7 +55,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -67,6 +68,7 @@ import com.example.moodapp.viewModel.HistoryMoodViewModel
 @Composable
 fun HistoryMood(
     navController: NavController,
+    windowSizeClass: WindowSizeClass,
     viewModel: HistoryMoodViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -75,10 +77,8 @@ fun HistoryMood(
         label = "Rotation Animation"
     )
 
-    // Determine window size class without changing function parameters
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
-    val isExpandedScreen = screenWidth > 600.dp // Tablet/desktop threshold
+    // Use the windowSizeClass parameter instead of calculating internally
+    val isExpandedScreen = windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium
 
     Box(
         modifier = Modifier
@@ -229,7 +229,9 @@ fun HistoryMood(
 
                     // Right column - Entry list (2/3 of screen)
                     Column(
-                        modifier = Modifier.weight(0.65f).padding(top=40.dp)
+                        modifier = Modifier
+                            .weight(0.65f)
+                            .padding(top = 40.dp)
                     ) {
                         // Handle the case when no entries are found
                         if (state.filteredEntries.isEmpty()) {
@@ -643,7 +645,7 @@ fun MoodCard(
         }
     }
 
-    // Діалог підтвердження видалення
+    // Delete confirmation dialog
     if (showDeleteConfirmation) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
@@ -681,7 +683,7 @@ fun EditMoodDialog(
     var showMoodDropdown by remember { mutableStateOf(false) }
     val moodOptions = listOf("Happy", "Good", "Neutral", "Sad", "Bad")
 
-    // Функція для отримання ресурсу зображення відповідно до настрою
+    // Function to get image resource based on mood
     fun getMoodImageResource(mood: String): Int {
         return when (mood) {
             "Happy" -> com.example.moodapp.R.drawable.icon_happy_mood
@@ -782,7 +784,7 @@ fun EditMoodDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    // Створення оновленого запису
+                    // Create updated entry
                     val updatedEntry = entry.copy(
                         mood = selectedMood,
                         moodImageResId = getMoodImageResource(selectedMood),
