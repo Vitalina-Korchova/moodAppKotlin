@@ -79,10 +79,10 @@ class MainActivity : ComponentActivity() {
                                 HistoryMood(navController,windowSizeClass)
                             }
                             composable("signin_screen") {
-                                Authorization(navController)
+                                Authorization(navController, windowSizeClass)
                             }
                             composable("signup_screen") {
-                                Registration(navController )
+                                Registration(navController,windowSizeClass )
                             }
                             composable("profile") {
                                 Profile(navController, windowSizeClass)

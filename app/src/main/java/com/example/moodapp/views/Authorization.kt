@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,14 +24,60 @@ import com.example.moodapp.R
 import com.example.moodapp.viewModel.AuthorizationViewModel
 import kotlinx.coroutines.launch
 
-
 @Composable
-fun Authorization(navController: NavController, viewModel: AuthorizationViewModel = viewModel()) {
+fun Authorization(
+    navController: NavController,
+    windowSizeClass: WindowSizeClass,
+    viewModel: AuthorizationViewModel = viewModel()
+) {
     val login by viewModel.login.collectAsState()
     val password by viewModel.password.collectAsState()
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
+
+    // Визначення розмірів на основі windowSizeClass
+    val imageSize = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 130.dp
+        WindowWidthSizeClass.Medium -> 180.dp
+        WindowWidthSizeClass.Expanded -> 220.dp
+        else -> 130.dp
+    }
+
+    val textFieldWidth = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 260.dp
+        WindowWidthSizeClass.Medium -> 360.dp
+        WindowWidthSizeClass.Expanded -> 420.dp
+        else -> 260.dp
+    }
+
+    val buttonWidth = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 150.dp
+        WindowWidthSizeClass.Medium -> 200.dp
+        WindowWidthSizeClass.Expanded -> 250.dp
+        else -> 150.dp
+    }
+
+    val buttonHeight = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 50.dp
+        WindowWidthSizeClass.Medium -> 60.dp
+        WindowWidthSizeClass.Expanded -> 70.dp
+        else -> 50.dp
+    }
+
+    val fontSize = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 20.sp
+        WindowWidthSizeClass.Medium -> 22.sp
+        WindowWidthSizeClass.Expanded -> 24.sp
+        else -> 20.sp
+    }
+
+    val titleFontSize = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> MaterialTheme.typography.headlineMedium
+        WindowWidthSizeClass.Medium -> MaterialTheme.typography.headlineLarge
+        WindowWidthSizeClass.Expanded -> MaterialTheme.typography.displaySmall
+        else -> MaterialTheme.typography.headlineMedium
+    }
 
     // перехід на екран вибору настрою при успішному вході
     LaunchedEffect(isLoggedIn) {
@@ -45,7 +93,15 @@ fun Authorization(navController: NavController, viewModel: AuthorizationViewMode
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.onPrimary)
-            .padding(16.dp),
+            .padding(
+                horizontal = when (windowSizeClass.widthSizeClass) {
+                    WindowWidthSizeClass.Compact -> 16.dp
+                    WindowWidthSizeClass.Medium -> 32.dp
+                    WindowWidthSizeClass.Expanded -> 64.dp
+                    else -> 16.dp
+                },
+                vertical = 16.dp
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -54,14 +110,14 @@ fun Authorization(navController: NavController, viewModel: AuthorizationViewMode
             contentDescription = "Login Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .height(130.dp)
-                .width(130.dp)
+                .height(imageSize)
+                .width(imageSize)
                 .padding(bottom = 16.dp)
         )
 
         Text(
             text = "Authorization",
-            style = MaterialTheme.typography.headlineMedium,
+            style = titleFontSize,
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
@@ -70,10 +126,10 @@ fun Authorization(navController: NavController, viewModel: AuthorizationViewMode
             onValueChange = { viewModel.onLoginChanged(it) },
             label = { Text("Login") },
             modifier = Modifier
-                .width(260.dp)
+                .width(textFieldWidth)
                 .padding(bottom = 10.dp),
             shape = RoundedCornerShape(20.dp),
-
+            textStyle = LocalTextStyle.current.copy(fontSize = fontSize * 0.8f)
         )
 
         OutlinedTextField(
@@ -83,9 +139,10 @@ fun Authorization(navController: NavController, viewModel: AuthorizationViewMode
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier
-                .width(260.dp)
+                .width(textFieldWidth)
                 .padding(bottom = 16.dp),
             shape = RoundedCornerShape(20.dp),
+            textStyle = LocalTextStyle.current.copy(fontSize = fontSize * 0.8f)
         )
 
         Button(
@@ -96,27 +153,28 @@ fun Authorization(navController: NavController, viewModel: AuthorizationViewMode
             },
             enabled = login.isNotEmpty() && password.isNotEmpty(),
             modifier = Modifier
-                .width(150.dp)
-                .height(50.dp),
+                .width(buttonWidth)
+                .height(buttonHeight),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ),
         ) {
-            Text("Sign In", fontSize = 20.sp)
+            Text("Sign In", fontSize = fontSize)
         }
 
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(top = 16.dp)
         ) {
             Text(
                 text = "Create Account",
-                fontSize = 14.sp,
+                fontSize = fontSize * 0.7f,
             )
 
             TextButton(onClick = { navController.navigate("signup_screen") }) {
-                Text("Sign up", fontSize = 15.sp)
+                Text("Sign up", fontSize = fontSize * 0.75f)
             }
         }
     }

@@ -67,7 +67,7 @@ fun SideNavigation(navController: NavController) {
                     Row(
                         modifier = Modifier
                             .width(120.dp)
-                            .padding(start = 8.dp),
+                            .padding(start = 8.dp, end = 2.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
 
@@ -75,7 +75,7 @@ fun SideNavigation(navController: NavController) {
                         Icon(
                             painter = painterResource(id = screen.icon),
                             contentDescription = screen.label,
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(24.dp).padding(end = 5.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Text(

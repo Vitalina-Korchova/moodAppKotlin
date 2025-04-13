@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,12 +26,73 @@ import com.example.moodapp.viewModel.RegistrationViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun Registration(navController: NavController, viewModel: RegistrationViewModel = viewModel()) {
+fun Registration(
+    navController: NavController,
+    windowSizeClass: WindowSizeClass,
+    viewModel: RegistrationViewModel = viewModel()
+) {
     val login by viewModel.login.collectAsState()
     val password by viewModel.password.collectAsState()
     val dateOfBirth by viewModel.dateOfBirth.collectAsState()
     val isPrivacyAccepted by viewModel.isPrivacyAccepted.collectAsState()
     val isRegistered by viewModel.isRegistered.collectAsState()
+
+    // Визначення розмірів на основі windowSizeClass
+    val imageSize = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 100.dp
+        WindowWidthSizeClass.Medium -> 150.dp
+        WindowWidthSizeClass.Expanded -> 180.dp
+        else -> 100.dp
+    }
+
+    val textFieldWidth = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 260.dp
+        WindowWidthSizeClass.Medium -> 360.dp
+        WindowWidthSizeClass.Expanded -> 420.dp
+        else -> 260.dp
+    }
+
+    val buttonWidth = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 150.dp
+        WindowWidthSizeClass.Medium -> 200.dp
+        WindowWidthSizeClass.Expanded -> 250.dp
+        else -> 150.dp
+    }
+
+    val buttonHeight = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 50.dp
+        WindowWidthSizeClass.Medium -> 60.dp
+        WindowWidthSizeClass.Expanded -> 70.dp
+        else -> 50.dp
+    }
+
+    val buttonFontSize = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 20.sp
+        WindowWidthSizeClass.Medium -> 22.sp
+        WindowWidthSizeClass.Expanded -> 24.sp
+        else -> 20.sp
+    }
+
+    val labelFontSize = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 16.sp
+        WindowWidthSizeClass.Medium -> 18.sp
+        WindowWidthSizeClass.Expanded -> 20.sp
+        else -> 16.sp
+    }
+
+    val textFontSize = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 14.sp
+        WindowWidthSizeClass.Medium -> 16.sp
+        WindowWidthSizeClass.Expanded -> 18.sp
+        else -> 14.sp
+    }
+
+    val titleStyle = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> MaterialTheme.typography.headlineMedium
+        WindowWidthSizeClass.Medium -> MaterialTheme.typography.headlineLarge
+        WindowWidthSizeClass.Expanded -> MaterialTheme.typography.displaySmall
+        else -> MaterialTheme.typography.headlineMedium
+    }
 
     //для виклику асинхронної функції viewModel.registerUser(), коли користувач натисне кнопку Sign Up
     val coroutineScope = rememberCoroutineScope()
@@ -48,7 +111,15 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
         modifier = Modifier
             .fillMaxSize()
             .background(androidx.compose.ui.graphics.Color.White)
-            .padding(16.dp),
+            .padding(
+                horizontal = when (windowSizeClass.widthSizeClass) {
+                    WindowWidthSizeClass.Compact -> 16.dp
+                    WindowWidthSizeClass.Medium -> 32.dp
+                    WindowWidthSizeClass.Expanded -> 64.dp
+                    else -> 16.dp
+                },
+                vertical = 16.dp
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -57,24 +128,24 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
             contentDescription = "Login Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .height(100.dp)
-                .width(100.dp)
+                .height(imageSize)
+                .width(imageSize)
                 .padding(bottom = 16.dp)
         )
 
         Text(
             text = "Registration",
-            style = MaterialTheme.typography.headlineMedium,
+            style = titleStyle,
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
         OutlinedTextField(
             value = login,
             onValueChange = { viewModel.onLoginChanged(it) },
-            label = { Text("Login", fontSize = 16.sp) },
-            textStyle = TextStyle(fontSize = 14.sp),
+            label = { Text("Login", fontSize = labelFontSize) },
+            textStyle = TextStyle(fontSize = textFontSize),
             modifier = Modifier
-                .width(260.dp)
+                .width(textFieldWidth)
                 .padding(bottom = 6.dp),
             shape = RoundedCornerShape(20.dp),
             singleLine = true
@@ -83,12 +154,12 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
         OutlinedTextField(
             value = password,
             onValueChange = { viewModel.onPasswordChanged(it) },
-            label = { Text("Password", fontSize = 16.sp) },
-            textStyle = TextStyle(fontSize = 14.sp),
+            label = { Text("Password", fontSize = labelFontSize) },
+            textStyle = TextStyle(fontSize = textFontSize),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier
-                .width(260.dp)
+                .width(textFieldWidth)
                 .padding(bottom = 6.dp),
             shape = RoundedCornerShape(20.dp),
             singleLine = true
@@ -97,10 +168,10 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
         OutlinedTextField(
             value = dateOfBirth,
             onValueChange = { viewModel.onDateOfBirthChanged(it) },
-            label = { Text("Date of Birth", fontSize = 16.sp) },
-            textStyle = TextStyle(fontSize = 14.sp),
+            label = { Text("Date of Birth", fontSize = labelFontSize) },
+            textStyle = TextStyle(fontSize = textFontSize),
             modifier = Modifier
-                .width(260.dp)
+                .width(textFieldWidth)
                 .padding(bottom = 16.dp),
             shape = RoundedCornerShape(20.dp),
             singleLine = true
@@ -108,7 +179,7 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
 
         Box(
             modifier = Modifier
-                .width(260.dp)
+                .width(textFieldWidth)
                 .padding(bottom = 16.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -118,11 +189,19 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
             ) {
                 Checkbox(
                     checked = isPrivacyAccepted,
-                    onCheckedChange = { viewModel.onPrivacyAcceptedChanged(it) }
+                    onCheckedChange = { viewModel.onPrivacyAcceptedChanged(it) },
+                    modifier = Modifier.size(
+                        when (windowSizeClass.widthSizeClass) {
+                            WindowWidthSizeClass.Compact -> 24.dp
+                            WindowWidthSizeClass.Medium -> 30.dp
+                            WindowWidthSizeClass.Expanded -> 36.dp
+                            else -> 24.dp
+                        }
+                    )
                 )
                 Text(
                     text = "I accept the Privacy Policy",
-                    fontSize = 14.sp,
+                    fontSize = textFontSize,
                     modifier = Modifier.padding(start = 4.dp)
                 )
             }
@@ -136,14 +215,14 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
             },
             enabled = login.isNotEmpty() && password.isNotEmpty() && dateOfBirth.isNotEmpty() && isPrivacyAccepted,
             modifier = Modifier
-                .width(150.dp)
-                .height(50.dp),
+                .width(buttonWidth)
+                .height(buttonHeight),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ),
         ) {
-            Text("Sign Up", fontSize = 20.sp)
+            Text("Sign Up", fontSize = buttonFontSize)
         }
     }
 }

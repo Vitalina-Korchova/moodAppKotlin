@@ -38,7 +38,7 @@ fun Profile(
     viewModel: ProfileViewModel = viewModel()
 ) {
     val isWideScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
-    windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium
+            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium
 
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState()
@@ -49,23 +49,25 @@ fun Profile(
             .verticalScroll(scrollState)
             .background(MaterialTheme.colorScheme.onPrimary)
             .padding(
-                horizontal = if (isWideScreen) 32.dp else 16.dp,
-                vertical = 16.dp
+                horizontal = if (isWideScreen) 36.dp else 16.dp,
+                vertical = if (isWideScreen) 20.dp else 16.dp
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (uiState.isLoading) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                modifier = Modifier.size(if (isWideScreen) 48.dp else 40.dp)
+            )
         }
 
         uiState.errorMessage?.let { error ->
             AlertDialog(
                 onDismissRequest = { viewModel.clearError() },
-                title = { Text("Error") },
-                text = { Text(error) },
+                title = { Text("Error", fontSize = if (isWideScreen) 18.sp else 16.sp) },
+                text = { Text(error, fontSize = if (isWideScreen) 16.sp else 14.sp) },
                 confirmButton = {
                     Button(onClick = { viewModel.clearError() }) {
-                        Text("OK")
+                        Text("OK", fontSize = if (isWideScreen) 16.sp else 14.sp)
                     }
                 }
             )
@@ -74,28 +76,28 @@ fun Profile(
         // Profile Header
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier.padding(bottom = if (isWideScreen) 28.dp else 24.dp)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_profile),
                 contentDescription = "Profile Picture",
-                modifier = Modifier.size(if (isWideScreen) 100.dp else 80.dp),
+                modifier = Modifier.size(if (isWideScreen) 110.dp else 80.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(if (isWideScreen) 10.dp else 8.dp))
 
             // Username
             Text(
                 text = uiState.profileData.username,
-                fontSize = if (isWideScreen) 28.sp else 24.sp,
+                fontSize = if (isWideScreen) 30.sp else 24.sp,
                 fontWeight = FontWeight.Bold
             )
 
             // Birth Date
             Text(
                 text = "Date of Birth: ${uiState.profileData.dateOfBirth}",
-                fontSize = if (isWideScreen) 18.sp else 16.sp,
+                fontSize = if (isWideScreen) 20.sp else 16.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -106,23 +108,23 @@ fun Profile(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp)
+                    .padding(vertical = 20.dp),
+                horizontalArrangement = Arrangement.spacedBy(28.dp)
             ) {
                 // Left column - Statistics
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(vertical = 16.dp)
+                        .padding(vertical = 20.dp)
                 ) {
                     Text(
                         text = "Statistics",
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
+                        modifier = Modifier.padding(bottom = 20.dp)
                     )
 
-                    //  спільний модифікатор для обох рядків
+                    // Common modifier for both rows
                     val itemModifierT = Modifier.weight(1f)
 
                     Row(
@@ -134,7 +136,7 @@ fun Profile(
                                 icon = Icons.Default.CheckCircle,
                                 label = "Moods Recorded",
                                 value = uiState.statistics.moodsRecorded.toString(),
-                                isWideScreen = false
+                                isWideScreen = true
                             )
                         }
 
@@ -143,7 +145,7 @@ fun Profile(
                                 icon = Icons.Default.DateRange,
                                 label = "Streak",
                                 value = "${uiState.statistics.streakDays} days",
-                                isWideScreen = false
+                                isWideScreen = true
                             )
                         }
 
@@ -152,15 +154,15 @@ fun Profile(
                                 icon = Icons.Default.Star,
                                 label = "Achievements",
                                 value = uiState.statistics.achievements.toString(),
-                                isWideScreen = false
+                                isWideScreen = true
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(top = 28.dp),
+                        modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Box(modifier = itemModifierT, contentAlignment = Alignment.Center) {
@@ -168,7 +170,7 @@ fun Profile(
                                 icon = Icons.Default.Favorite,
                                 label = "Fav advices",
                                 value = uiState.statistics.moodsRecorded.toString(),
-                                isWideScreen = false
+                                isWideScreen = true
                             )
                         }
 
@@ -177,7 +179,7 @@ fun Profile(
                                 icon = Icons.Default.Create,
                                 label = "Updated moods",
                                 value = "${uiState.statistics.streakDays} days",
-                                isWideScreen = false
+                                isWideScreen = true
                             )
                         }
 
@@ -186,7 +188,7 @@ fun Profile(
                                 icon = Icons.Default.Warning,
                                 label = "Missed Days",
                                 value = uiState.statistics.achievements.toString(),
-                                isWideScreen = false
+                                isWideScreen = true
                             )
                         }
                     }
@@ -196,34 +198,37 @@ fun Profile(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(vertical = 16.dp)
+                        .padding(vertical = 20.dp)
                 ) {
                     Text(
                         text = "App Settings",
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
+                        modifier = Modifier.padding(bottom = 20.dp)
                     )
 
                     SettingsItem(
                         icon = Icons.Default.Place,
                         title = "Region",
                         subtitle = uiState.profileData.region,
-                        onClick = { }
+                        onClick = { },
+                        isWideScreen = true
                     )
 
                     SettingsItem(
                         icon = Icons.Default.Info,
                         title = "Language",
                         subtitle = uiState.profileData.language,
-                        onClick = { }
+                        onClick = { },
+                        isWideScreen = true
                     )
 
                     SettingsItem(
                         icon = Icons.Default.Notifications,
                         title = "Notifications",
                         subtitle = if (uiState.profileData.notificationsEnabled) "On" else "Off",
-                        onClick = { }
+                        onClick = { },
+                        isWideScreen = true
                     )
                 }
             }
@@ -242,7 +247,7 @@ fun Profile(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                // спільний модифікатор для обох рядків
+                // Common modifier for both rows
                 val itemModifier = Modifier.weight(1f)
 
                 Row(
@@ -329,26 +334,29 @@ fun Profile(
                     icon = Icons.Default.Place,
                     title = "Region",
                     subtitle = uiState.profileData.region,
-                    onClick = { }
+                    onClick = { },
+                    isWideScreen = false
                 )
 
                 SettingsItem(
                     icon = Icons.Default.Info,
                     title = "Language",
                     subtitle = uiState.profileData.language,
-                    onClick = { }
+                    onClick = { },
+                    isWideScreen = false
                 )
 
                 SettingsItem(
                     icon = Icons.Default.Notifications,
                     title = "Notifications",
                     subtitle = if (uiState.profileData.notificationsEnabled) "On" else "Off",
-                    onClick = { }
+                    onClick = { },
+                    isWideScreen = false
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(if (isWideScreen) 24.dp else 15.dp))
+        Spacer(modifier = Modifier.height(if (isWideScreen) 28.dp else 15.dp))
 
         // Logout Button - adapts width based on screen size
         Button(
@@ -358,9 +366,9 @@ fun Profile(
             },
             modifier = Modifier
                 .let {
-                    if (isWideScreen) it.width(300.dp) else it.fillMaxWidth()
+                    if (isWideScreen) it.width(320.dp) else it.fillMaxWidth()
                 }
-                .padding(vertical = 8.dp),
+                .padding(vertical = if (isWideScreen) 10.dp else 8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error
             )
@@ -368,11 +376,11 @@ fun Profile(
             Icon(
                 imageVector = Icons.Default.ExitToApp,
                 contentDescription = "Logout",
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.padding(end = 10.dp).size(if (isWideScreen) 24.dp else 20.dp)
             )
             Text(
                 text = "Log Out",
-                fontSize = if (isWideScreen) 18.sp else 16.sp
+                fontSize = if (isWideScreen) 20.sp else 16.sp
             )
         }
     }
@@ -392,20 +400,20 @@ fun StatItem(
             imageVector = icon,
             contentDescription = label,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(if (isWideScreen) 32.dp else 28.dp)
+            modifier = Modifier.size(if (isWideScreen) 36.dp else 28.dp)
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(if (isWideScreen) 6.dp else 4.dp))
 
         Text(
             text = value,
             fontWeight = FontWeight.Bold,
-            fontSize = if (isWideScreen) 18.sp else 16.sp
+            fontSize = if (isWideScreen) 20.sp else 16.sp
         )
 
         Text(
             text = label,
-            fontSize = if (isWideScreen) 14.sp else 12.sp,
+            fontSize = if (isWideScreen) 16.sp else 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
@@ -416,22 +424,23 @@ fun SettingsItem(
     icon: ImageVector,
     title: String,
     subtitle: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isWideScreen: Boolean = false
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = if (isWideScreen) 14.dp else 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = title,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(if (isWideScreen) 28.dp else 24.dp)
         )
 
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(if (isWideScreen) 20.dp else 16.dp))
 
         Column(
             modifier = Modifier.weight(1f)
@@ -439,12 +448,12 @@ fun SettingsItem(
             Text(
                 text = title,
                 fontWeight = FontWeight.Medium,
-                fontSize = 16.sp
+                fontSize = if (isWideScreen) 18.sp else 16.sp
             )
 
             Text(
                 text = subtitle,
-                fontSize = 14.sp,
+                fontSize = if (isWideScreen) 16.sp else 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -453,7 +462,8 @@ fun SettingsItem(
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = "Navigate",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(if (isWideScreen) 28.dp else 24.dp)
             )
         }
     }
