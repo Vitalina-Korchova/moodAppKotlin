@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.moodapp.R
-import com.example.moodapp.ui.theme.customPurple
 import com.example.moodapp.viewModel.RegistrationViewModel
 import kotlinx.coroutines.launch
 
@@ -140,8 +139,8 @@ fun Registration(navController: NavController, viewModel: RegistrationViewModel 
                 .width(150.dp)
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = customPurple,
-                contentColor = androidx.compose.ui.graphics.Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
         ) {
             Text("Sign Up", fontSize = 20.sp)

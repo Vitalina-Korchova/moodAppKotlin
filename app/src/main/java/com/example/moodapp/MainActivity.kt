@@ -10,12 +10,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.moodapp.ui.theme.MoodAppTheme
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.MoodAppTheme
 import com.example.moodapp.views.ActivitiesMood
 import com.example.moodapp.views.Authorization
 import com.example.moodapp.views.BottomNavigation

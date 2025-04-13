@@ -39,6 +39,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -60,7 +61,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.moodapp.model.MoodEntry
-import com.example.moodapp.ui.theme.customPurple
 import com.example.moodapp.viewModel.HistoryMoodViewModel
 
 @Composable
@@ -77,12 +77,13 @@ fun HistoryMood(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.onPrimary)
             .padding(16.dp)
     ) {
         if (state.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
-                color = customPurple
+                color = MaterialTheme.colorScheme.primary
             )
         } else {
             Column {
@@ -100,7 +101,7 @@ fun HistoryMood(
                     shape = RoundedCornerShape(12.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color.White
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
                     )
                 ) {
                     Column(
@@ -150,6 +151,7 @@ fun HistoryMood(
                                     label = { Text("Search activities") },
                                     modifier = Modifier
                                         .fillMaxWidth()
+                                        .background(MaterialTheme.colorScheme.onPrimary)
                                         .padding(bottom = 12.dp),
                                     trailingIcon = {
                                         if (state.searchText.isNotEmpty()) {
@@ -174,7 +176,8 @@ fun HistoryMood(
                                         value = state.selectedMood,
                                         onValueChange = { },
                                         label = { Text("Select mood") },
-                                        modifier = Modifier.fillMaxWidth(),
+                                        modifier = Modifier.fillMaxWidth().
+                                        background(MaterialTheme.colorScheme.onPrimary),
                                         readOnly = true,
                                         trailingIcon = {
                                             IconButton(onClick = {
@@ -199,7 +202,7 @@ fun HistoryMood(
                                         },
                                         modifier = Modifier
                                             .fillMaxWidth(0.9f)
-                                            .background(Color.White)
+                                            .background(MaterialTheme.colorScheme.onPrimary)
                                     ) {
                                         state.moodOptions.forEach { mood ->
                                             DropdownMenuItem(
@@ -218,7 +221,7 @@ fun HistoryMood(
                                         viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.ClearFilters)
                                     },
                                     colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.Gray
+                                        containerColor = MaterialTheme.colorScheme.primary
                                     ),
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
@@ -268,7 +271,7 @@ fun HistoryMood(
                                     viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.ToggleFiltersSection)
                                 },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = customPurple
+                                    containerColor = MaterialTheme.colorScheme.primary
                                 ),
                                 modifier = Modifier.padding(top = 16.dp)
                             ) {
@@ -314,7 +317,7 @@ fun MoodCard(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
         )
     ) {
         Column(
@@ -332,7 +335,7 @@ fun MoodCard(
                 Text(
                     text = entry.date,
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.scrim
                 )
 
                 // Action buttons
@@ -344,7 +347,7 @@ fun MoodCard(
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Edit mood entry",
-                            tint = customPurple
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
 
@@ -355,7 +358,7 @@ fun MoodCard(
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete mood entry",
-                            tint = Color.Red
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -380,7 +383,7 @@ fun MoodCard(
                     text = entry.mood,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
-                    color = customPurple
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -413,7 +416,7 @@ fun MoodCard(
                         Box(
                             modifier = Modifier
                                 .background(
-                                    color = customPurple.copy(alpha = 0.1f),
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                                     shape = RoundedCornerShape(6.dp)
                                 )
                                 .padding(horizontal = 8.dp, vertical = 6.dp),
@@ -422,7 +425,7 @@ fun MoodCard(
                             Text(
                                 text = activity,
                                 fontSize = 12.sp,
-                                color = customPurple,
+                                color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -445,7 +448,7 @@ fun MoodCard(
                         showDeleteConfirmation = false
                     }
                 ) {
-                    Text("Delete", color = Color.Red)
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
@@ -507,7 +510,7 @@ fun EditMoodDialog(
                     Button(
                         onClick = { showMoodDropdown = true },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = customPurple
+                            containerColor = MaterialTheme.colorScheme.primary
                         ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -582,7 +585,7 @@ fun EditMoodDialog(
                     onUpdate(updatedEntry)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = customPurple
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Text("Update")

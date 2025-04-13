@@ -1,5 +1,6 @@
 package com.example.moodapp.views
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +23,8 @@ import com.example.moodapp.R
 fun BottomNavigation(navController: NavController) {
     Box(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.onPrimary),
 
         contentAlignment = Alignment.Center
     ) {
@@ -43,7 +46,7 @@ fun BottomNavigation(navController: NavController) {
                             painter = painterResource(id = screen.icon),
                             contentDescription = screen.label,
                             modifier = Modifier.size(28.dp),
-                            tint = Color(0xFF6200EE)
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     },
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.moodapp.ui.theme.customPurple
 import com.example.moodapp.viewModel.ActivitiesMoodViewModel
 
 @Composable
@@ -48,6 +48,7 @@ fun ActivitiesMood(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.onPrimary)
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -75,14 +76,14 @@ fun ActivitiesMood(
             ) {
                 items(state.allActivities) { activity ->
                     val isSelected = state.selectedActivities.contains(activity)
-                    val backgroundColor = if (isSelected) customPurple else Color.White
-                    val textColor = if (isSelected) Color.White else customPurple
+                    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
+                    val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
 
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(
-                                BorderStroke(2.dp, customPurple),
+                                BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .background(backgroundColor, shape = RoundedCornerShape(8.dp))
@@ -114,8 +115,8 @@ fun ActivitiesMood(
                 .padding(top = 16.dp, bottom = 8.dp)
                 .align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(
-                containerColor = customPurple,
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
             shape = RoundedCornerShape(16.dp),
             elevation = ButtonDefaults.buttonElevation(8.dp)

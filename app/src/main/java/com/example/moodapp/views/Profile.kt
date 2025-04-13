@@ -1,5 +1,6 @@
 package com.example.moodapp.views
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -34,6 +35,7 @@ fun Profile(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
+            .background(MaterialTheme.colorScheme.onPrimary)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -62,7 +64,7 @@ fun Profile(
                 painter = painterResource(id = R.drawable.icon_profile),
                 contentDescription = "Profile Picture",
                 modifier = Modifier.size(80.dp),
-                tint = Color(0xFF6200EE)
+                tint = MaterialTheme.colorScheme.primary
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -188,7 +190,7 @@ fun StatItem(
         Icon(
             imageVector = icon,
             contentDescription = label,
-            tint = Color(0xFF6200EE),
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(28.dp)
         )
 
@@ -224,7 +226,7 @@ fun SettingsItem(
         Icon(
             imageVector = icon,
             contentDescription = title,
-            tint = Color(0xFF6200EE),
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp)
         )
 

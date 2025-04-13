@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.moodapp.R
-import com.example.moodapp.ui.theme.customPurple
 import com.example.moodapp.viewModel.AuthorizationViewModel
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun Authorization(navController: NavController, viewModel: AuthorizationViewModel = viewModel()) {
@@ -44,7 +44,7 @@ fun Authorization(navController: NavController, viewModel: AuthorizationViewMode
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(androidx.compose.ui.graphics.Color.White)
+            .background(MaterialTheme.colorScheme.onPrimary)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -73,6 +73,7 @@ fun Authorization(navController: NavController, viewModel: AuthorizationViewMode
                 .width(260.dp)
                 .padding(bottom = 10.dp),
             shape = RoundedCornerShape(20.dp),
+
         )
 
         OutlinedTextField(
@@ -98,8 +99,8 @@ fun Authorization(navController: NavController, viewModel: AuthorizationViewMode
                 .width(150.dp)
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = customPurple,
-                contentColor = androidx.compose.ui.graphics.Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
         ) {
             Text("Sign In", fontSize = 20.sp)
