@@ -4,9 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,9 +28,11 @@ import com.example.moodapp.views.ChooseMood
 import com.example.moodapp.views.HistoryMood
 import com.example.moodapp.views.Profile
 import com.example.moodapp.views.Registration
+import com.example.moodapp.views.SideNavigation
 
 class MainActivity : ComponentActivity() {
     private val TAG = "MainActivity"
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: Активність створена")
@@ -33,20 +40,30 @@ class MainActivity : ComponentActivity() {
             MoodAppTheme {
                 val navController = rememberNavController()
                 val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
+                val windowSizeClass = calculateWindowSizeClass(this)
+                val routesWithNav = listOf("history_mood", "profile")
+                val showNav = currentDestination in routesWithNav
 
-                val routesWithBottomNav = listOf("history_mood", "profile")
-                val showBottomNav = currentDestination in routesWithBottomNav
-                Scaffold(modifier = Modifier.fillMaxSize(),
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        if (showBottomNav) {
+                        if (showNav && windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
                             BottomNavigation(navController = navController)
                         }
-                    }) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = "signin_screen",
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
+                    }
+                ) { innerPadding ->
+                    Row(modifier = Modifier.padding(innerPadding)) {
+                        if (showNav && windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
+                            SideNavigation(navController = navController)
+                        }
+
+                        NavHost(
+                            navController = navController,
+                            startDestination = "signin_screen",
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        ) {
                         composable("choose_mood") {
                             ChooseMood(navController)
                         }
@@ -69,30 +86,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart: Активність стала видимою")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume: Активність доступна для взаємодії")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause: Активність більше не в центрі уваги")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop: Активність більше не видима")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy: Активність знищена")
+      }
     }
 }
 

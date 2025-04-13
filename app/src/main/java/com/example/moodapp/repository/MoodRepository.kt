@@ -23,7 +23,7 @@ object MoodRepository {
                 date = "03.03.2025",
                 mood = "Sad",
                 moodImageResId = R.drawable.icon_sad_mood,
-                activities = listOf("Sleeping", "Movie")
+                activities = listOf("Sleeping", "Movie", "Walking", "Cooking")
             ),
             MoodEntry(
                 id = UUID.randomUUID().toString(),
@@ -37,7 +37,7 @@ object MoodRepository {
                 date = "08.03.2025",
                 mood = "Neutral",
                 moodImageResId = R.drawable.icon_neutral_mood,
-                activities = listOf("Cleaning", "Work", "Studying")
+                activities = listOf("Cleaning", "Work")
             ),
             MoodEntry(
                 id = UUID.randomUUID().toString(),

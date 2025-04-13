@@ -1,14 +1,8 @@
 package com.example.moodapp.views
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,19 +19,13 @@ fun BottomNavigation(navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.onPrimary),
-
         contentAlignment = Alignment.Center
     ) {
         NavigationBar(
-            modifier = Modifier
-                .height(35.dp),
+            modifier = Modifier.height(35.dp),
             containerColor = Color.Transparent
-
         ) {
-            val items = listOf(
-                Screen.HistoryMood,
-                Screen.Profile
-            )
+            val items = listOf(Screen.HistoryMood, Screen.Profile)
 
             items.forEach { screen ->
                 NavigationBarItem(
@@ -49,7 +37,6 @@ fun BottomNavigation(navController: NavController) {
                             tint = MaterialTheme.colorScheme.primary
                         )
                     },
-
                     selected = navController.currentDestination?.route == screen.route,
                     onClick = {
                         navController.navigate(screen.route) {
@@ -62,6 +49,38 @@ fun BottomNavigation(navController: NavController) {
                     }
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun SideNavigation(navController: NavController) {
+    NavigationRail(
+        containerColor = MaterialTheme.colorScheme.onPrimary
+    ) {
+        val items = listOf(Screen.HistoryMood, Screen.Profile)
+
+        items.forEach { screen ->
+            NavigationRailItem(
+                icon = {
+                    Icon(
+                        painter = painterResource(id = screen.icon),
+                        contentDescription = screen.label,
+                        modifier = Modifier.size(28.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
+                selected = navController.currentDestination?.route == screen.route,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
     }
 }

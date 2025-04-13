@@ -1,5 +1,6 @@
 package com.example.moodapp.views
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -24,7 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,13 +34,39 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.moodapp.viewModel.ActivitiesMoodViewModel
 
+import androidx.activity.ComponentActivity
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun ActivitiesMood(
     navController: NavController,
     viewModel: ActivitiesMoodViewModel = viewModel()
 ) {
-
     val state by viewModel.state.collectAsState()
+
+    // Get window size class for adaptive UI
+    val activity = LocalContext.current as? ComponentActivity
+    val windowSizeClass = activity?.let { calculateWindowSizeClass(it) }
+    val isTablet = windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Expanded ||
+            windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Medium
+
+    // Adaptive sizing based on device type
+    val titleFontSize = if (isTablet) 32.sp else 24.sp
+    val activityTextSize = if (isTablet) 18.sp else 14.sp
+    val buttonTextSize = if (isTablet) 24.sp else 20.sp
+    val contentPadding = if (isTablet) 32.dp else 16.dp
+    val gridSpacing = if (isTablet) 24.dp else 16.dp
+    val activityPadding = if (isTablet) 16.dp else 8.dp
+    val cornerRadius = if (isTablet) 12.dp else 8.dp
+    val borderWidth = if (isTablet) 3.dp else 2.dp
+    val buttonWidth = if (isTablet) 200.dp else 150.dp
+    val buttonCornerRadius = if (isTablet) 20.dp else 16.dp
+    val buttonElevation = if (isTablet) 12.dp else 8.dp
+    val gridCellCount = if (isTablet) 3 else 3 // More columns on tablet
 
     if (state.isNavigateToHistory) {
         navController.navigate("history_mood")
@@ -49,16 +77,16 @@ fun ActivitiesMood(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.onPrimary)
-            .padding(16.dp),
+            .padding(contentPadding),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "What have you been up to?",
-            fontSize = 24.sp,
+            fontSize = titleFontSize,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(top = 55.dp)
+                .padding(top = if (isTablet) 80.dp else 55.dp)
                 .align(Alignment.CenterHorizontally)
         )
 
@@ -69,9 +97,9 @@ fun ActivitiesMood(
             contentAlignment = Alignment.Center
         ) {
             LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                columns = GridCells.Fixed(gridCellCount),
+                verticalArrangement = Arrangement.spacedBy(gridSpacing),
+                horizontalArrangement = Arrangement.spacedBy(gridSpacing),
                 modifier = Modifier.fillMaxWidth(0.9f)
             ) {
                 items(state.allActivities) { activity ->
@@ -83,20 +111,19 @@ fun ActivitiesMood(
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(
-                                BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
-                                shape = RoundedCornerShape(8.dp)
+                                BorderStroke(borderWidth, MaterialTheme.colorScheme.primary),
+                                shape = RoundedCornerShape(cornerRadius)
                             )
-                            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
+                            .background(backgroundColor, shape = RoundedCornerShape(cornerRadius))
                             .clickable {
-
                                 viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(activity))
                             }
-                            .padding(horizontal = 8.dp, vertical = 8.dp),
+                            .padding(horizontal = activityPadding, vertical = activityPadding),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = activity,
-                            fontSize = 14.sp,
+                            fontSize = activityTextSize,
                             color = textColor,
                             fontWeight = FontWeight.Bold
                         )
@@ -107,21 +134,25 @@ fun ActivitiesMood(
 
         Button(
             onClick = {
-                // Send event to ViewModel when save button is clicked
                 viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.SaveButtonClicked)
                 Log.d("ActivitiesMood", "Selected activities: ${state.selectedActivities}")
             },
             modifier = Modifier
-                .padding(top = 16.dp, bottom = 8.dp)
+                .width(buttonWidth)
+                .padding(top = if (isTablet) 24.dp else 16.dp, bottom = if (isTablet) 16.dp else 8.dp)
                 .align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ),
-            shape = RoundedCornerShape(16.dp),
-            elevation = ButtonDefaults.buttonElevation(8.dp)
+            shape = RoundedCornerShape(buttonCornerRadius),
+            elevation = ButtonDefaults.buttonElevation(buttonElevation)
         ) {
-            Text(text = "Save", fontSize = 20.sp)
+            Text(
+                text = "Save",
+                fontSize = buttonTextSize,
+                modifier = Modifier.padding(vertical = if (isTablet) 8.dp else 4.dp)
+            )
         }
     }
 }
