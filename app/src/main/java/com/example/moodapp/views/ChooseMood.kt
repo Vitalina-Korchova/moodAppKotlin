@@ -25,8 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,12 +32,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.moodapp.viewModel.ChooseMoodViewModel
-import androidx.activity.ComponentActivity
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import android.annotation.SuppressLint
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import com.example.moodapp.viewModel.HistoryMoodViewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @SuppressLint("ContextCastToActivity")
@@ -47,7 +44,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 fun ChooseMood(
     navController: NavController,
     windowSizeClass: WindowSizeClass,
-    viewModel: ChooseMoodViewModel = viewModel()
+    viewModel: ChooseMoodViewModel= viewModel()
 ) {
     val state by viewModel.state.collectAsState()
 

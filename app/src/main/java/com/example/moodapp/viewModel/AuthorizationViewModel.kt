@@ -5,7 +5,7 @@ import com.example.moodapp.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class AuthorizationViewModel : ViewModel() {
+open class AuthorizationViewModel : ViewModel() {
     private val _login = MutableStateFlow("")
     val login: StateFlow<String> = _login
 

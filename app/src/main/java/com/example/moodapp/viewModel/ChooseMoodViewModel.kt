@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class ChooseMoodViewModel : ViewModel() {
+open class ChooseMoodViewModel : ViewModel() {
 
     // визначає, які дані зберігає ViewModel для керування станом екрана настрою
     data class MoodState(
