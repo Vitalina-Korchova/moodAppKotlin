@@ -45,6 +45,34 @@ class HistoryMoodViewModel : ViewModel() {
 
     val state: StateFlow<HistoryState> = _state.asStateFlow()
 
+    fun setTestData(entries: List<MoodEntry>) {
+        _state.value = _state.value.copy(
+            allEntries = entries,
+            filteredEntries = entries,
+            isLoading = false
+        )
+    }
+
+    fun setLoadingState(loading: Boolean) {
+        _state.value = _state.value.copy(isLoading = loading)
+    }
+
+    fun setEntries(entries: List<MoodEntry>) {
+        _state.value = _state.value.copy(
+            allEntries = entries,
+            filteredEntries = entries,
+            isLoading = false
+        )
+    }
+
+    fun clearEntries() {
+        _state.value = _state.value.copy(
+            allEntries = emptyList(),
+            filteredEntries = emptyList(),
+            isLoading = false
+        )
+    }
+
     init {
         loadMoodEntries()
     }

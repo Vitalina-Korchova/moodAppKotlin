@@ -31,10 +31,18 @@ data class ProfileUiState(
     val statistics: UserStatistics = UserStatistics()
 )
 
-class ProfileViewModel : ViewModel() {
+open class ProfileViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+    open val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+
+    fun setLoadingState(loading: Boolean) {
+        _uiState.value = _uiState.value.copy(isLoading = loading)
+    }
+
+    fun showError(message: String) {
+        _uiState.value = _uiState.value.copy(errorMessage = message)
+    }
 
     private val userRepository = UserRepository
 
