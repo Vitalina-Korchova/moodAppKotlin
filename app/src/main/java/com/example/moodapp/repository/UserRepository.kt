@@ -4,6 +4,7 @@ import com.example.moodapp.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+
 object UserRepository {
     private val _userState = MutableStateFlow<User?>(null)
 
