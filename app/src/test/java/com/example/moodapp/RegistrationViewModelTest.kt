@@ -17,14 +17,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
+
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -40,14 +36,14 @@ class RegistrationViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher) // <-- додаємо обов'язково
+        Dispatchers.setMain(testDispatcher)
         mockUserRepository = mock(UserRepository::class.java)
         viewModel = RegistrationViewModel()
     }
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain() // <-- повертаємо Main
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -81,7 +77,7 @@ class RegistrationViewModelTest {
     @Test
     fun shouldNotRegisterUserWhenFieldsAreEmpty() = testScope.runTest {
         viewModel.registerUser()
-        advanceUntilIdle() // чекаємо всі корутини
+        advanceUntilIdle()
         assertFalse(viewModel.isRegistered.first())
     }
 

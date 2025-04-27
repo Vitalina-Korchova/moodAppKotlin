@@ -39,9 +39,9 @@ class ActivitiesMoodViewModelTest {
     fun activityToggledShouldRemoveActivityWhenAlreadySelected() = runTest {
         val activity = "Reading"
 
-        // First select
+
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(activity))
-        // Then deselect
+
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(activity))
 
         val state = viewModel.state.value
@@ -52,7 +52,7 @@ class ActivitiesMoodViewModelTest {
     fun activityToggledShouldNotAddMoreThanMaxSelectableActivities() = runTest {
         val activities = listOf("Reading", "Movie", "Sport", "Family", "Friends")
 
-        // Try to select 5 activities (limit is 4)
+
         activities.forEach {
             viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(it))
         }
@@ -77,9 +77,9 @@ class ActivitiesMoodViewModelTest {
 
     @Test
     fun navigationHandledShouldResetNavigationFlag() = runTest {
-        // Спочатку емуляція переходу
+
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.SaveButtonClicked)
-        // Скидання навігації
+
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.NavigationHandled)
 
         val state = viewModel.state.value

@@ -88,39 +88,38 @@ class ChooseMoodScreenTest {
 
     @Test
     fun testMoodSelection() {
-        // Select Happy mood
+
         composeTestRule.onNodeWithContentDescription("Happy mood").performClick()
         composeTestRule.onNodeWithText("Happy").assertIsDisplayed()
 
-        // Select Sad mood
+
         composeTestRule.onNodeWithContentDescription("Sad mood").performClick()
         composeTestRule.onNodeWithText("Sad").assertIsDisplayed()
     }
 
     @Test
     fun testSaveButtonNavigation() {
-        // 1. Вибираємо будь-який настрій (наприклад, Neutral)
+
         composeTestRule.onNodeWithContentDescription("Neutral mood").performClick()
 
-        // 2. Натискаємо кнопку Save
+
         composeTestRule.onNodeWithText("Save").performClick()
 
-        // 3. Даємо час на обробку навігації
+
         composeTestRule.waitUntil(3000) {
             navController.currentBackStackEntry?.destination?.route == "activities_mood"
         }
 
-        // 4. Перевіряємо навігацію
+
         assertEquals("activities_mood", navController.currentBackStackEntry?.destination?.route)
     }
 
     @Test
     fun testInitialState() {
-        // Verify save button is enabled by default
+
         composeTestRule.onNodeWithText("Save").assertIsEnabled()
 
-        // Verify no mood is selected initially (text is not bold)
-        // This is now just checking visibility since we can't check font weight
+
         listOf("Happy", "Good", "Neutral", "Sad", "Bad").forEach { mood ->
             composeTestRule.onNodeWithText(mood).assertIsDisplayed()
         }

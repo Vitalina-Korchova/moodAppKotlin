@@ -59,14 +59,14 @@ class ActivitiesMoodScreenTest {
 
     @Test
     fun verifyMainElementsDisplayed() {
-        // Перевірка основних елементів
+
         composeTestRule.onNodeWithText("What have you been up to?").assertIsDisplayed()
         composeTestRule.onNodeWithText("Save").assertIsDisplayed()
     }
 
     @Test
     fun verifyAllActivitiesDisplayed() {
-        // Перевірка наявності всіх активностей
+
         val testActivities = listOf(
             "Reading", "Movie", "Sport", "Family",
             "Friends", "Studying", "Date", "Sleeping",
@@ -81,51 +81,50 @@ class ActivitiesMoodScreenTest {
 
     @Test
     fun testActivitySelection() {
-        // Вибираємо активність
+
         composeTestRule.onNodeWithText("Reading").performClick()
         composeTestRule.onNodeWithText("Sport").performClick()
 
-        // Перевіряємо, що кнопка Save активна
+
         composeTestRule.onNodeWithText("Save").assertIsEnabled()
     }
 
     @Test
     fun testMaxActivitiesSelection() {
-        // Вибираємо максимальну кількість активностей (4)
+        //  максимальна кількість активностей 4
         composeTestRule.onNodeWithText("Reading").performClick()
         composeTestRule.onNodeWithText("Movie").performClick()
         composeTestRule.onNodeWithText("Sport").performClick()
         composeTestRule.onNodeWithText("Family").performClick()
 
-        // Спроба вибрати п'яту активність
+
         composeTestRule.onNodeWithText("Friends").performClick()
 
-        // Перевіряємо, що вибрано лише 4 активності
-        // (Тут можна додати перевірку через ViewModel, якщо потрібно)
+
     }
 
     @Test
     fun testSaveButtonNavigation() {
-        // Вибираємо активності
+
         composeTestRule.onNodeWithText("Reading").performClick()
         composeTestRule.onNodeWithText("Sport").performClick()
 
-        // Натискаємо кнопку Save
+
         composeTestRule.onNodeWithText("Save").performClick()
 
-        // Даємо час на обробку навігації
+
         composeTestRule.waitUntil(3000) {
             navController.currentBackStackEntry?.destination?.route == "history_mood"
         }
 
-        // Перевіряємо навігацію
+
         assertEquals("history_mood", navController.currentBackStackEntry?.destination?.route)
     }
 
     @Test
     fun testInitialState() {
-        // Перевіряємо початковий стан
+
         composeTestRule.onNodeWithText("Save").assertIsEnabled()
-        // Перевіряємо, що жодна активність не вибрана спочатку
+
     }
 }

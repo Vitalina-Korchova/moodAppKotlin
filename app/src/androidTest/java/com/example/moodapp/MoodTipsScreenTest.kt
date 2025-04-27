@@ -8,6 +8,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -62,10 +63,10 @@ class MoodTipsScreenTest {
     fun compactScreen_shouldShowListInitially() {
         setupComposeContent(isWideScreen = false)
 
-        // Verify title
+
         composeTestRule.onNodeWithText("Mood Tips").assertIsDisplayed()
 
-        // Verify all tips are shown
+
         moodTips.forEach { tip ->
             composeTestRule.onNodeWithText(tip).assertIsDisplayed()
         }
@@ -75,13 +76,13 @@ class MoodTipsScreenTest {
     fun compactScreen_shouldShowDetailWhenTipSelected() {
         setupComposeContent(isWideScreen = false)
 
-        // Select first tip
+
         composeTestRule.onNodeWithText(moodTips[0]).performClick()
 
-        // Verify back button appears
+
         composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
 
-        // Verify detail content appears
+
         composeTestRule.onNodeWithText("Details:").assertIsDisplayed()
     }
 
@@ -89,11 +90,11 @@ class MoodTipsScreenTest {
     fun compactScreen_shouldReturnToListWhenBackClicked() {
         setupComposeContent(isWideScreen = false)
 
-        // Select and then go back
+
         composeTestRule.onNodeWithText(moodTips[0]).performClick()
         composeTestRule.onNodeWithContentDescription("Back").performClick()
 
-        // Verify list is shown again
+
         composeTestRule.onNodeWithText("Mood Tips").assertIsDisplayed()
     }
 
@@ -101,10 +102,10 @@ class MoodTipsScreenTest {
     fun wideScreen_shouldShowBothListAndDetailInitially() {
         setupComposeContent(isWideScreen = true)
 
-        // Verify list is shown
+
         composeTestRule.onNodeWithText("Mood Tips").assertIsDisplayed()
 
-        // Verify default detail message
+
         composeTestRule.onNodeWithText("Select a tip from the list").assertIsDisplayed()
     }
 
@@ -112,13 +113,13 @@ class MoodTipsScreenTest {
     fun wideScreen_shouldUpdateDetailWhenTipSelected() {
         setupComposeContent(isWideScreen = true)
 
-        // Select first tip
+
         composeTestRule.onNodeWithText(moodTips[0]).performClick()
 
-        // Verify detail updates (we can't verify exact content since it's not exposed)
+
         composeTestRule.onNodeWithText("Details:").assertIsDisplayed()
 
-        // Verify no back button in wide layout
+
         composeTestRule.onNodeWithContentDescription("Back").assertDoesNotExist()
     }
 
@@ -129,18 +130,18 @@ class MoodTipsScreenTest {
     fun shouldDisplayCorrectTipDetails() {
         setupComposeContent(isWideScreen = false)
 
-        // Test each tip's detail view
+
         moodTips.forEachIndexed { index, tip ->
-            // Select the tip
+
             composeTestRule.onNodeWithText(tip).performClick()
 
-            // Verify detail header
+
             composeTestRule.onNodeWithText("Details:").assertIsDisplayed()
 
-            // Go back to list
+
             composeTestRule.onNodeWithContentDescription("Back").performClick()
 
-            // Small delay between tests
+
             Thread.sleep(100)
         }
     }
@@ -149,7 +150,54 @@ class MoodTipsScreenTest {
     fun compactScreen_initialState_shouldNotShowDetail() {
         setupComposeContent(isWideScreen = false)
 
-        // Verify detail placeholder isn't shown in compact mode
+
         composeTestRule.onNodeWithText("Select a tip from the list").assertDoesNotExist()
     }
+
+    @Test
+    fun mediumScreen_shouldShowListAndPlaceholderDetailInitially() {
+        setupComposeContent(isWideScreen = true) // Medium or Expanded
+
+        // Verify list is shown
+        composeTestRule.onNodeWithText("Mood Tips").assertIsDisplayed()
+
+        // Verify placeholder in detail pane
+        composeTestRule.onNodeWithText("Select a tip from the list").assertIsDisplayed()
+    }
+
+
+    @Test
+    fun compactScreen_shouldShowOnlyListInitially() {
+        setupComposeContent(isWideScreen = false)
+
+        composeTestRule.onNodeWithText("Mood Tips").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Details:").assertDoesNotExist()
+        composeTestRule.onNodeWithText("Select a tip from the list").assertDoesNotExist()
+    }
+
+    @Test
+    fun wideScreen_shouldShowCorrectProportions() {
+        setupComposeContent(isWideScreen = true)
+
+        composeTestRule.onAllNodesWithText("Mood Tips")[0].assertIsDisplayed()
+        composeTestRule.onNodeWithText("Select a tip from the list").assertIsDisplayed()
+    }
+
+    @Test
+    fun compactScreen_navigationFlow() {
+        setupComposeContent(isWideScreen = false)
+
+        composeTestRule.onNodeWithText("Mood Tips").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText(moodTips[2]).performClick()
+
+        composeTestRule.onNodeWithText("Details:").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
+
+        composeTestRule.onNodeWithContentDescription("Back").performClick()
+        composeTestRule.onNodeWithText("Mood Tips").assertIsDisplayed()
+    }
+
+
 }

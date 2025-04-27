@@ -22,14 +22,14 @@ class HistoryMoodViewModelTest {
 
     @Before
     fun setup() {
-        // Set the Main dispatcher to our test dispatcher
+
         Dispatchers.setMain(testDispatcher)
         viewModel = HistoryMoodViewModel()
     }
 
     @After
     fun tearDown() {
-        // Reset the Main dispatcher after tests
+
         Dispatchers.resetMain()
     }
 

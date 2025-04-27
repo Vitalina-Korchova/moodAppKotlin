@@ -45,7 +45,7 @@ class RegistrationScreenTest {
     @Before
     fun setUp() {
         composeTestRule.setContent {
-            // Initialize TestNavHostController
+
             navController = TestNavHostController(LocalContext.current).apply {
                 navigatorProvider.addNavigator(ComposeNavigator())
             }
@@ -68,7 +68,7 @@ class RegistrationScreenTest {
 
     @Test
     fun registrationScreen_verifyAllElementsVisible() {
-        // Check all main elements are displayed
+
         composeTestRule.onNodeWithText("Registration").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Login Image").assertIsDisplayed()
         composeTestRule.onNodeWithText("Login").assertIsDisplayed()
@@ -80,47 +80,47 @@ class RegistrationScreenTest {
 
     @Test
     fun registrationScreen_signUpButtonInitiallyDisabled() {
-        // Button should be initially disabled
+
         composeTestRule.onNodeWithText("Sign Up").assertIsNotEnabled()
     }
 
     @Test
     fun registrationScreen_signUpButtonEnabledWhenAllFieldsFilled() {
-        // Fill all required fields
+
         composeTestRule.onNodeWithText("Login").performTextInput("testuser")
         composeTestRule.onNodeWithText("Password").performTextInput("password123")
         composeTestRule.onNodeWithText("Date of Birth").performTextInput("01.01.2000")
 
-        // Use the SemanticsMatcher for Checkbox
+
         composeTestRule.onNode(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox))
             .performClick()
 
-        // Wait for UI to update
+
         composeTestRule.waitForIdle()
 
-        // Check if button is enabled
+
         composeTestRule.onNodeWithText("Sign Up").assertIsEnabled()
     }
 
     @Test
     fun registrationScreen_privacyPolicyToggle() {
-        // Заповнення всіх обов'язкових полів
+
         composeTestRule.onNodeWithText("Login").performTextInput("testuser")
         composeTestRule.onNodeWithText("Password").performTextInput("password123")
         composeTestRule.onNodeWithText("Date of Birth").performTextInput("01.01.2000")
 
-        // Перевірка: кнопка має бути вимкнена
+
         composeTestRule.onNodeWithText("Sign Up").assertIsNotEnabled()
 
-        // Натискаємо саме на чекбокс
+
         composeTestRule
             .onNode(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox))
             .performClick()
 
-        // Дочекаймося оновлення
+
         composeTestRule.waitForIdle()
 
-        // Перевірка: тепер кнопка має бути увімкнена
+
         composeTestRule.onNodeWithText("Sign Up").assertIsEnabled()
     }
 

@@ -49,9 +49,9 @@ class AuthorizationScreenTest {
     @Before
     fun setUp() {
         composeTestRule.setContent {
-            // Правильна ініціалізація TestNavHostController
+
             navController = TestNavHostController(LocalContext.current).apply {
-                navigatorProvider.addNavigator(ComposeNavigator()) // Додаємо обов'язковий ComposeNavigator
+                navigatorProvider.addNavigator(ComposeNavigator())
             }
 
             val windowSizeClass = WindowSizeClass.calculateFromSize(DpSize(1000.dp, 1000.dp))
@@ -73,7 +73,7 @@ class AuthorizationScreenTest {
 
     @Test
     fun authorizationScreen_verifyAllElementsVisible() {
-        // Перевірка наявності всіх основних елементів
+
         composeTestRule.onNodeWithText("Authorization").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Login Image").assertIsDisplayed()
         composeTestRule.onNodeWithText("Login").assertIsDisplayed()
@@ -85,7 +85,7 @@ class AuthorizationScreenTest {
 
     @Test
     fun authorizationScreen_verifyLoginInput() {
-        // Симуляція введення логіну
+
         composeTestRule.onNodeWithText("Login").performTextInput("testuser")
         composeTestRule.onNodeWithText("Login").assertTextContains("testuser")
     }
@@ -93,13 +93,13 @@ class AuthorizationScreenTest {
 
     @Test
     fun authorizationScreen_loginButtonInitiallyDisabled() {
-        // Кнопка має бути неактивною при запуску
+
         composeTestRule.onNodeWithText("Sign In").assertIsNotEnabled()
     }
 
     @Test
     fun authorizationScreen_loginButtonEnabledWhenFieldsFilled() {
-        // Кнопка стає активною при заповнених полях
+
         composeTestRule.onNodeWithText("Login").performTextInput("user")
         composeTestRule.onNodeWithText("Password").performTextInput("pass")
         composeTestRule.onNodeWithText("Sign In").assertIsEnabled()
@@ -107,7 +107,7 @@ class AuthorizationScreenTest {
 
     @Test
     fun authorizationScreen_navigateToSignUp() {
-        // Перевірка переходу на екран реєстрації
+
         composeTestRule.onNodeWithText("Sign up").performClick()
         assertEquals("signup_screen", navController.currentBackStackEntry?.destination?.route)
     }

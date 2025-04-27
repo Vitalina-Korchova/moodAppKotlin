@@ -13,16 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="ResponsibleDesignTest">
+      <SelectionState runConfigName="HistoryMoodScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="ProfileScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="profileScreen_verifyAllElementsVisible()">
+      <SelectionState runConfigName="wideScreen_verifySettingsLayout()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ResponsiveDesignTest">
+      <SelectionState runConfigName="compactScreen_verifyStatisticsLayout()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="compactScreen_verifySettingsLayout()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
