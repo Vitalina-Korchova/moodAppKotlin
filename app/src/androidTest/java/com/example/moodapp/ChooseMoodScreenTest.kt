@@ -60,10 +60,10 @@ class ChooseMoodScreenTest {
                     startDestination = "choose_mood"
                 ) {
                     composable("choose_mood") {
-                        val viewModel = ChooseMoodViewModel() // Реальний ViewModel
+                        val viewModel = ChooseMoodViewModel()
                         ChooseMood(navController, windowSizeClass, viewModel)
                     }
-                    composable("activities_mood") { /* Пустий екран для тесту */ }
+                    composable("activities_mood") { /**/ }
                 }
             }
         }

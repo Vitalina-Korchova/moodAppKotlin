@@ -55,6 +55,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -62,6 +63,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.moodapp.model.MoodEntry
 import com.example.moodapp.viewModel.HistoryMoodViewModel
 
@@ -582,12 +585,25 @@ fun MoodCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                // Mood image
-                Image(
-                    painter = painterResource(id = entry.moodImageResId),
-                    contentDescription = "Mood: ${entry.mood}",
-                    modifier = Modifier.size(48.dp)
-                )
+                // Mood image - handles both URL and local resource
+                if (entry.moodImageResId.startsWith("http")) {
+                    // URL image with Coil
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(entry.moodImageResId)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Mood: ${entry.mood}",
+                        modifier = Modifier.size(48.dp),
+
+                    )
+                } else {
+                        Image(
+                            painter = painterResource(id = entry.moodImageResId.toInt()),
+                            contentDescription = "Mood: ${entry.mood}",
+                            modifier = Modifier.size(48.dp)
+                        )
+                }
 
                 Text(
                     text = entry.mood,
@@ -787,7 +803,7 @@ fun EditMoodDialog(
                     // Create updated entry
                     val updatedEntry = entry.copy(
                         mood = selectedMood,
-                        moodImageResId = getMoodImageResource(selectedMood),
+                        moodImageResId = getMoodImageResource(selectedMood).toString(),
                         activities = activitiesText.split(",")
                             .map { it.trim() }
                             .filter { it.isNotEmpty() }

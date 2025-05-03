@@ -34,7 +34,6 @@ import com.example.moodapp.viewmodels.UserStatistics
 import com.example.moodapp.views.Profile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -121,7 +120,6 @@ class ProfileScreenTest {
         setupScreenWithSize(DpSize(840.dp, 1000.dp))
 
         composeTestRule.onNodeWithContentDescription("Profile Picture").assertIsDisplayed()
-
         composeTestRule.onNodeWithText("Test User").assertIsDisplayed()
         composeTestRule.onNodeWithText("Date of Birth: 1 January 1990").assertIsDisplayed()
     }
@@ -130,7 +128,6 @@ class ProfileScreenTest {
     fun compactScreen_verifyStatisticsLayout() {
 
         setupScreenWithSize(DpSize(360.dp, 640.dp))
-
 
         composeTestRule.onRoot().printToLog("UI_HIERARCHY")
 

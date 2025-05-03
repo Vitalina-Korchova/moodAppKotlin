@@ -41,7 +41,6 @@ class ActivitiesMoodViewModelTest {
 
 
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(activity))
-
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(activity))
 
         val state = viewModel.state.value
@@ -68,7 +67,6 @@ class ActivitiesMoodViewModelTest {
         activities.forEach {
             viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(it))
         }
-
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.SaveButtonClicked)
 
         val state = viewModel.state.value
@@ -79,7 +77,6 @@ class ActivitiesMoodViewModelTest {
     fun navigationHandledShouldResetNavigationFlag() = runTest {
 
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.SaveButtonClicked)
-
         viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.NavigationHandled)
 
         val state = viewModel.state.value

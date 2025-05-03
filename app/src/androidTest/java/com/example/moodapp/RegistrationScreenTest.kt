@@ -95,10 +95,7 @@ class RegistrationScreenTest {
         composeTestRule.onNode(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox))
             .performClick()
 
-
         composeTestRule.waitForIdle()
-
-
         composeTestRule.onNodeWithText("Sign Up").assertIsEnabled()
     }
 
@@ -111,16 +108,11 @@ class RegistrationScreenTest {
 
 
         composeTestRule.onNodeWithText("Sign Up").assertIsNotEnabled()
-
-
         composeTestRule
             .onNode(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox))
             .performClick()
 
-
         composeTestRule.waitForIdle()
-
-
         composeTestRule.onNodeWithText("Sign Up").assertIsEnabled()
     }
 

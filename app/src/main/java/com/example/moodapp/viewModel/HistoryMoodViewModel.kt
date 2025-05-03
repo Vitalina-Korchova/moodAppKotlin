@@ -22,9 +22,10 @@ class HistoryMoodViewModel : ViewModel() {
         val moodOptions: List<String> = listOf("All", "Happy", "Good", "Neutral", "Sad", "Bad"),
         val isDropdownExpanded: Boolean = false,
         val areFiltersExpanded: Boolean = false,
-        val isLoading: Boolean = true, //Чи завантажуються дані
+        val isLoading: Boolean = true, // Чи завантажуються дані
         val isUpdating: Boolean = false, // Стан оновлення запису
-        val selectedEntry: MoodEntry? = null // Вибраний запис для редагування
+        val selectedEntry: MoodEntry? = null, // Вибраний запис для редагування
+        val errorMessage: String? = null // Повідомлення про помилку
     )
 
     //    визначає взаємодії юзера з UI
@@ -38,6 +39,7 @@ class HistoryMoodViewModel : ViewModel() {
         object CancelUpdate : HistoryEvent() // скасування редагування
         data class UpdateEntry(val updatedEntry: MoodEntry) : HistoryEvent() // оновлення запису
         data class DeleteEntry(val entryId: String) : HistoryEvent() // видалення запису
+        object RefreshData : HistoryEvent() // оновлення даних з API
     }
 
     //внутрішній стан, який можна змінювати
@@ -45,44 +47,46 @@ class HistoryMoodViewModel : ViewModel() {
 
     val state: StateFlow<HistoryState> = _state.asStateFlow()
 
-    fun setTestData(entries: List<MoodEntry>) {
-        _state.value = _state.value.copy(
-            allEntries = entries,
-            filteredEntries = entries,
-            isLoading = false
-        )
-    }
-
-    fun setLoadingState(loading: Boolean) {
-        _state.value = _state.value.copy(isLoading = loading)
-    }
-
-    fun setEntries(entries: List<MoodEntry>) {
-        _state.value = _state.value.copy(
-            allEntries = entries,
-            filteredEntries = entries,
-            isLoading = false
-        )
-    }
-
-    fun clearEntries() {
-        _state.value = _state.value.copy(
-            allEntries = emptyList(),
-            filteredEntries = emptyList(),
-            isLoading = false
-        )
-    }
-
     init {
         loadMoodEntries()
+        observeRepositoryState()
+    }
+
+    private fun observeRepositoryState() {
+        viewModelScope.launch {
+            // Спостерігаємо за станом завантаження
+            MoodRepository.isLoading.collectLatest { isLoading ->
+                _state.value = _state.value.copy(isLoading = isLoading)
+            }
+        }
+
+        viewModelScope.launch {
+            // Спостерігаємо за помилками
+            MoodRepository.error.collectLatest { error ->
+                _state.value = _state.value.copy(errorMessage = error)
+            }
+        }
+
+        viewModelScope.launch {
+            // Спостерігаємо за даними настроїв
+            MoodRepository.moods.collectLatest { entries ->
+                _state.value = _state.value.copy(
+                    allEntries = entries,
+                    filteredEntries = applyFilters(entries, _state.value.searchText, _state.value.selectedMood)
+                )
+            }
+        }
     }
 
     private fun loadMoodEntries() {
         viewModelScope.launch {
-            MoodRepository.moods.collectLatest { entries ->
+            try {
+                // Запит даних з API
+                MoodRepository.fetchMoodsFromApi()
+            } catch (e: Exception) {
+                Log.e("HistoryMoodViewModel", "Error loading data", e)
                 _state.value = _state.value.copy(
-                    allEntries = entries,
-                    filteredEntries = applyFilters(entries, _state.value.searchText, _state.value.selectedMood),
+                    errorMessage = "Помилка завантаження даних: ${e.message}",
                     isLoading = false
                 )
             }
@@ -152,9 +156,10 @@ class HistoryMoodViewModel : ViewModel() {
                     isUpdating = false
                 )
             } catch (e: Exception) {
-
-                _state.value = _state.value.copy(isUpdating = false)
-
+                _state.value = _state.value.copy(
+                    isUpdating = false,
+                    errorMessage = "Помилка оновлення запису: ${e.message}"
+                )
             }
         }
     }
@@ -164,13 +169,28 @@ class HistoryMoodViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 MoodRepository.deleteMoodEntry(entryId)
-
             } catch (e: Exception) {
-                Log.d("Error", "Error  Delete Mood")
+                Log.e("HistoryMoodViewModel", "Error deleting mood entry", e)
+                _state.value = _state.value.copy(
+                    errorMessage = "Помилка видалення запису: ${e.message}"
+                )
             }
         }
     }
 
+    // оновлення даних з API
+    private fun refreshData() {
+        viewModelScope.launch {
+            try {
+                MoodRepository.fetchMoodsFromApi()
+            } catch (e: Exception) {
+                Log.e("HistoryMoodViewModel", "Error refreshing data", e)
+                _state.value = _state.value.copy(
+                    errorMessage = "Помилка оновлення даних: ${e.message}"
+                )
+            }
+        }
+    }
 
     fun onEvent(event: HistoryEvent) {
         when (event) {
@@ -183,6 +203,7 @@ class HistoryMoodViewModel : ViewModel() {
             is HistoryEvent.CancelUpdate -> cancelUpdate()
             is HistoryEvent.UpdateEntry -> updateEntry(event.updatedEntry)
             is HistoryEvent.DeleteEntry -> deleteEntry(event.entryId)
+            is HistoryEvent.RefreshData -> refreshData()
         }
     }
 

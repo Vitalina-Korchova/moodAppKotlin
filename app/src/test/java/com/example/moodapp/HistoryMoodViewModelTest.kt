@@ -18,7 +18,7 @@ import org.junit.Test
 class HistoryMoodViewModelTest {
 
     private lateinit var viewModel: HistoryMoodViewModel
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = StandardTestDispatcher() //в тестовому режимі
 
     @Before
     fun setup() {

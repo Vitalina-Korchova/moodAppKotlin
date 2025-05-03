@@ -27,17 +27,19 @@ import org.mockito.Mockito.mock
 class RegistrationViewModelTest {
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantTaskExecutorRule = InstantTaskExecutorRule() //гарантує, що LiveData та StateFlow події виконуються синхронно під час тестування
 
     private lateinit var viewModel: RegistrationViewModel
     private lateinit var mockUserRepository: UserRepository
-    private val testDispatcher = StandardTestDispatcher()
-    private val testScope = TestScope(testDispatcher)
+    private val testDispatcher = StandardTestDispatcher() //для контролю корутин під час тестів
+    private val testScope = TestScope(testDispatcher) //тести у симульованому часі.
+
+
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        mockUserRepository = mock(UserRepository::class.java)
+        mockUserRepository = mock(UserRepository::class.java) // створюється макет
         viewModel = RegistrationViewModel()
     }
 
@@ -77,7 +79,7 @@ class RegistrationViewModelTest {
     @Test
     fun shouldNotRegisterUserWhenFieldsAreEmpty() = testScope.runTest {
         viewModel.registerUser()
-        advanceUntilIdle()
+        advanceUntilIdle() //примушує виконати всі заплановані задачі в черзі корутин
         assertFalse(viewModel.isRegistered.first())
     }
 
