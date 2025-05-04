@@ -27,25 +27,6 @@ object MoodRepository {
     private var selectedMoodImageResId: Int? = null
     private var selectedActivities: List<String> = emptyList()
 
-    // Початкові тестові дані для використання, якщо API недоступний
-//    private val defaultMoodEntries = listOf(
-//        MoodEntry(
-//            id = UUID.randomUUID().toString(),
-//            date = "02.03.2025",
-//            mood = "Happy",
-//            moodImageResId = R.drawable.icon_happy_mood,
-//            activities = listOf("Reading", "Friends", "Walking", "Cooking")
-//        ),
-//        MoodEntry(
-//            id = UUID.randomUUID().toString(),
-//            date = "03.03.2025",
-//            mood = "Sad",
-//            moodImageResId = R.drawable.icon_sad_mood,
-//            activities = listOf("Sleeping", "Movie", "Walking", "Cooking")
-//        ),
-//        // інші тестові записи...
-//    )
-
     // Функція для завантаження даних з API
     suspend fun fetchMoodsFromApi() {
         _isLoading.value = true
@@ -67,8 +48,17 @@ object MoodRepository {
                     )
                 }
 
-                _moods.value = moodEntries
-                Log.d(TAG, "Data successfully loaded")
+                // Combine API entries with any local entries
+                // This ensures we don't lose local entries when refreshing from API
+                val localEntries = _moods.value.filter {
+                    it.moodImageResId.startsWith("local:")
+                }
+
+                // Combine entries but avoid duplicates
+                val combinedEntries = (moodEntries + localEntries).distinctBy { it.id }
+
+                _moods.value = combinedEntries
+                Log.d(TAG, "Data successfully loaded: ${combinedEntries.size} entries")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error loading data: ${e.message}", e)
@@ -91,25 +81,43 @@ object MoodRepository {
     }
 
     // створення MoodEntry та його збереження
-    fun finalizeMoodEntry() {
+    suspend fun finalizeMoodEntry() {
         val mood = selectedMood
         val moodImageResId = selectedMoodImageResId
 
         if (mood != null && moodImageResId != null) {
-            val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-            val newMoodEntry = MoodEntry(
-                id = UUID.randomUUID().toString(),
-                date = currentDate,
-                mood = mood,
-                moodImageResId = "local:$moodImageResId", // Prefix with "local:" to indicate it's a resource ID
-                activities = selectedActivities
-            )
-            _moods.value = _moods.value + newMoodEntry
+            withContext(Dispatchers.IO) {
+                val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                val newMoodEntry = MoodEntry(
+                    id = UUID.randomUUID().toString(),
+                    date = currentDate,
+                    mood = mood,
+                    moodImageResId = "local:$moodImageResId", // Mark as local resource
+                    activities = selectedActivities
+                )
 
-            // Clear temporary variables
-            selectedMood = null
-            selectedMoodImageResId = null
-            selectedActivities = emptyList()
+                // Update the StateFlow with the new entry
+                _moods.value = _moods.value + newMoodEntry
+
+                Log.d(TAG, "New mood entry created and added to state: ${newMoodEntry.id}")
+
+                // Optional: Try to persist this entry to your backend
+                try {
+                    // You would implement this API call if needed
+                    // RetrofitInstance.api.saveMoodEntry(newMoodEntry)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error saving mood entry to API: ${e.message}", e)
+                    // Still keep the entry locally even if API save fails
+                }
+
+                // Clear temporary variables
+                selectedMood = null
+                selectedMoodImageResId = null
+                selectedActivities = emptyList()
+            }
+        } else {
+            Log.e(TAG, "Cannot finalize mood entry: mood or moodImageResId is null")
+            _error.value = "Cannot create mood entry: mood or moodImageResId is null"
         }
     }
 

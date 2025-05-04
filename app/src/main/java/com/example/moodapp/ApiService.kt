@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface ApiService {
 
-    @GET("v3/05749646-c2f2-43dd-bb9b-10dae011221e")
+    @GET("v3/2b2ced53-00ae-420d-b727-0f1fab19a7a6")
     suspend fun getData(): List<MoodEntry>
 }

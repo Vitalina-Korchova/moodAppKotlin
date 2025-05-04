@@ -65,6 +65,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.moodapp.R
 import com.example.moodapp.model.MoodEntry
 import com.example.moodapp.viewModel.HistoryMoodViewModel
 
@@ -585,24 +586,39 @@ fun MoodCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                // Mood image - handles both URL and local resource
-                if (entry.moodImageResId.startsWith("http")) {
-                    // URL image with Coil
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(entry.moodImageResId)
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = "Mood: ${entry.mood}",
-                        modifier = Modifier.size(48.dp),
-
-                    )
-                } else {
-                        Image(
-                            painter = painterResource(id = entry.moodImageResId.toInt()),
+                // Mood image - handles both URL, local resource, and local prefix
+                when {
+                    entry.moodImageResId.startsWith("http") -> {
+                        // URL image with Coil
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(entry.moodImageResId)
+                                .crossfade(true)
+                                .build(),
                             contentDescription = "Mood: ${entry.mood}",
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier.size(48.dp),
                         )
+                    }
+                    entry.moodImageResId.startsWith("local:") -> {
+                        // Handle local resource with prefix
+
+                            val resourceId = entry.moodImageResId.substring("local:".length).toInt()
+                            Image(
+                                painter = painterResource(id = resourceId),
+                                contentDescription = "Mood: ${entry.mood}",
+                                modifier = Modifier.size(48.dp)
+                            )
+
+                    }
+                    else -> {
+
+                            Image(
+                                painter = painterResource(id = entry.moodImageResId.toInt()),
+                                contentDescription = "Mood: ${entry.mood}",
+                                modifier = Modifier.size(48.dp)
+                            )
+
+                    }
                 }
 
                 Text(

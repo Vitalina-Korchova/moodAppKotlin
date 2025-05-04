@@ -178,11 +178,32 @@ class HistoryMoodViewModel : ViewModel() {
         }
     }
 
-    // оновлення даних з API
+//    // оновлення даних з API
+//    private fun refreshData() {
+//        viewModelScope.launch {
+//            try {
+//                MoodRepository.fetchMoodsFromApi()
+//            } catch (e: Exception) {
+//                Log.e("HistoryMoodViewModel", "Error refreshing data", e)
+//                _state.value = _state.value.copy(
+//                    errorMessage = "Помилка оновлення даних: ${e.message}"
+//                )
+//            }
+//        }
+//    }
+
     private fun refreshData() {
         viewModelScope.launch {
             try {
+                // Instead of immediately replacing all data, consider merging with local entries
+                val currentEntries = _state.value.allEntries.filter { it.moodImageResId.startsWith("local:") }
+
+                // Fetch from API
                 MoodRepository.fetchMoodsFromApi()
+
+                // If you want to keep local entries that might not be in the API yet
+                // This would need to be implemented in the repository
+                // MoodRepository.ensureLocalEntriesPreserved(currentEntries)
             } catch (e: Exception) {
                 Log.e("HistoryMoodViewModel", "Error refreshing data", e)
                 _state.value = _state.value.copy(
