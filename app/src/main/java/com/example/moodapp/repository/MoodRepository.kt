@@ -1,11 +1,12 @@
 package com.example.moodapp.repository
 
+
 import android.content.ContentValues.TAG
 import android.util.Log
-import com.example.moodapp.R
-import com.example.moodapp.RetrofitInstance
 import com.example.moodapp.model.MoodEntry
+import com.example.moodapp.utils.MoodDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
@@ -13,122 +14,108 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-object MoodRepository {
-    private val _moods = MutableStateFlow<List<MoodEntry>>(emptyList())
+class MoodRepository(private val database: MoodDatabase) {
     private val _isLoading = MutableStateFlow(false)
     private val _error = MutableStateFlow<String?>(null)
 
-    // список MoodEntry, загорнутий у StateFlow, щоб дозволяти оновлення в реальному часі
-    val moods: StateFlow<List<MoodEntry>> = _moods
     val isLoading: StateFlow<Boolean> = _isLoading
     val error: StateFlow<String?> = _error
 
-    private var selectedMood: String? = null
-    private var selectedMoodImageResId: Int? = null
-    private var selectedActivities: List<String> = emptyList()
+    // Поточний запис настрою, який формується
+    private var currentMoodEntry: MoodEntry? = null
 
-    // Функція для завантаження даних з API
-    suspend fun fetchMoodsFromApi() {
+    // Отримання всіх записів з бази даних
+    val moods: Flow<List<MoodEntry>> = database.moodEntryDao().getAll()
+
+    // Збереження базових даних настрою
+    fun saveMood(mood: String, moodImageResId: Int) {
+        val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+        currentMoodEntry = MoodEntry(
+            id = UUID.randomUUID().toString(),
+            date = currentDate,
+            mood = mood,
+            moodImageResId = "local:$moodImageResId",
+            activities = emptyList() // Спочатку без активностей
+        )
+        Log.d("MoodRepository", "Mood saved: $mood")
+    }
+
+    // Збереження вибраних активностей
+    fun saveActivities(activities: List<String>) {
+        Log.d("MoodRepository", "Before update activities: Current entry = $currentMoodEntry")
+
+        if (currentMoodEntry == null) {
+            Log.e("MoodRepository", "ERROR: Cannot save activities - no current mood entry!")
+            return
+        }
+
+        // Make a new copy with updated activities
+        currentMoodEntry = currentMoodEntry?.copy(activities = activities)
+
+        Log.d("MoodRepository", "Activities saved to current entry: $activities")
+        Log.d("MoodRepository", "After update activities: Current entry = $currentMoodEntry")
+    }
+
+    // Фінальне збереження запису в базу даних
+    suspend fun finalizeMoodEntry() {
         _isLoading.value = true
         _error.value = null
 
         try {
-            withContext(Dispatchers.IO) {   //запускаю запит до API (введення/виведення)
-                val apiMoods = RetrofitInstance.api.getData()
-
-                val moodEntries = apiMoods.map { apiMood ->
-                    MoodEntry(
-                        id = apiMood.id,
-                        date = apiMood.date,
-                        mood = apiMood.mood,
-                        moodImageResId = apiMood.moodImageResId,
-                        activities = apiMood.activities
-                    )
+            currentMoodEntry?.let { entry ->
+                withContext(Dispatchers.IO) {
+                    database.moodEntryDao().insert(entry)
+                    Log.d("MoodRepository", "Entry saved to DB: $entry")
                 }
-                //перетворення кожного об’єкт  з API у MoodEntry
-                val localEntries = _moods.value.filter {
-                    it.moodImageResId.startsWith("local:")
-                }
-
-                val combinedEntries = (moodEntries + localEntries).distinctBy { it.id }
-
-                _moods.value = combinedEntries
-                Log.d(TAG, "Data successfully loaded: ${combinedEntries.size} entries")
+            } ?: run {
+                throw IllegalStateException("No mood data to save")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error loading data: ${e.message}", e)
-            _error.value = "Error loading data: ${e.message}"
+            Log.e("MoodRepository", "Error saving mood entry", e)
+            _error.value = "Error: ${e.message}"
         } finally {
             _isLoading.value = false
+            // Don't set currentMoodEntry to null here, in case we need to access it later
         }
     }
 
-
-    // збереження настрою
-    fun saveMood(mood: String, moodImageResId: Int) {
-        selectedMood = mood
-        selectedMoodImageResId = moodImageResId
+    // Getter for the current mood entry
+    fun getCurrentMoodEntry(): MoodEntry? {
+        return currentMoodEntry
     }
 
-    // збереження активностей
-    fun saveActivities(activities: List<String>) {
-        selectedActivities = activities
+    // Setter for the current mood entry (useful for edit mode)
+    fun setCurrentMoodEntry(entry: MoodEntry) {
+        currentMoodEntry = entry
     }
 
-    // створення MoodEntry та його збереження
-    suspend fun finalizeMoodEntry() {
-        val mood = selectedMood
-        val moodImageResId = selectedMoodImageResId
+    // Clear the current mood entry
+    fun clearCurrentMoodEntry() {
+        currentMoodEntry = null
+    }
 
-        if (mood != null && moodImageResId != null) {
-            withContext(Dispatchers.IO) {
-                val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-                val newMoodEntry = MoodEntry(
-                    id = UUID.randomUUID().toString(),
-                    date = currentDate,
-                    mood = mood,
-                    moodImageResId = "local:$moodImageResId",
-                    activities = selectedActivities
-                )
+    // Інші методи репозиторію...
+    suspend fun getMoodEntryById(id: String): MoodEntry? {
+        return withContext(Dispatchers.IO) {
+            database.moodEntryDao().getById(id)
+        }
+    }
 
-                _moods.value = _moods.value + newMoodEntry
+    suspend fun deleteMoodEntry(moodEntry: MoodEntry) {
+        withContext(Dispatchers.IO) {
+            database.moodEntryDao().delete(moodEntry)
+        }
+    }
 
-                Log.d(TAG, "New mood entry created and added to state: ${newMoodEntry.id}")
-
-
-//                try {
-//
-//                } catch (e: Exception) {
-//                    Log.e(TAG, "Error saving mood entry to API: ${e.message}", e)
-//                    // Still keep the entry locally even if API save fails
-//                }
-
-                selectedMood = null
-                selectedMoodImageResId = null
-                selectedActivities = emptyList()
+    suspend fun updateMoodEntry(updatedEntry: MoodEntry) {
+        withContext(Dispatchers.IO) {
+            try {
+                database.moodEntryDao().update(updatedEntry) // Using the new update method
+                Log.d(TAG, "Mood entry updated in database: ${updatedEntry.id}")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error updating mood entry", e)
+                _error.value = "Error updating mood entry: ${e.message}"
             }
-        } else {
-            Log.e(TAG, "Cannot finalize mood entry: mood or moodImageResId is null")
-            _error.value = "Cannot create mood entry: mood or moodImageResId is null"
         }
-    }
-
-    fun updateMoodEntry(updatedEntry: MoodEntry) {
-        val currentEntries = _moods.value.toMutableList()
-        val index = currentEntries.indexOfFirst { it.id == updatedEntry.id }
-
-        if (index != -1) {
-            currentEntries[index] = updatedEntry
-            _moods.value = currentEntries
-        }
-    }
-
-    fun deleteMoodEntry(entryId: String) {
-        val updatedEntries = _moods.value.filter { it.id != entryId }
-        _moods.value = updatedEntries
-    }
-
-    fun getMoodEntryById(entryId: String): MoodEntry? {
-        return _moods.value.find { it.id == entryId }
     }
 }

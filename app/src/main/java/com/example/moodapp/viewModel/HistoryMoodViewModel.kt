@@ -5,15 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moodapp.model.MoodEntry
 import com.example.moodapp.repository.MoodRepository
+import com.example.moodapp.utils.MoodDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class HistoryMoodViewModel : ViewModel() {
+class HistoryMoodViewModel(private val database: MoodDatabase) : ViewModel() {
+    private val repository = MoodRepository(database)
 
-    //State
+    // State
     data class HistoryState(
         val allEntries: List<MoodEntry> = emptyList(),
         val filteredEntries: List<MoodEntry> = emptyList(),
@@ -22,78 +24,60 @@ class HistoryMoodViewModel : ViewModel() {
         val moodOptions: List<String> = listOf("All", "Happy", "Good", "Neutral", "Sad", "Bad"),
         val isDropdownExpanded: Boolean = false,
         val areFiltersExpanded: Boolean = false,
-        val isLoading: Boolean = true, // Чи завантажуються дані
-        val isUpdating: Boolean = false, // Стан оновлення запису
-        val selectedEntry: MoodEntry? = null, // Вибраний запис для редагування
-        val errorMessage: String? = null // Повідомлення про помилку
+        val isLoading: Boolean = false,
+        val isUpdating: Boolean = false,
+        val selectedEntry: MoodEntry? = null,
+        val errorMessage: String? = null
     )
 
-    //    визначає взаємодії юзера з UI
+    // Events
     sealed class HistoryEvent {
         data class SearchTextChanged(val text: String) : HistoryEvent()
         data class MoodFilterSelected(val mood: String) : HistoryEvent()
         object ToggleDropdown : HistoryEvent()
         object ToggleFiltersSection : HistoryEvent()
         object ClearFilters : HistoryEvent()
-        data class SelectEntry(val entry: MoodEntry) : HistoryEvent() // вибір запису для редагування
-        object CancelUpdate : HistoryEvent() // скасування редагування
-        data class UpdateEntry(val updatedEntry: MoodEntry) : HistoryEvent() // оновлення запису
-        data class DeleteEntry(val entryId: String) : HistoryEvent() // видалення запису
-        object RefreshData : HistoryEvent() // оновлення даних з API
+        data class SelectEntry(val entry: MoodEntry) : HistoryEvent()
+        object CancelUpdate : HistoryEvent()
+        data class UpdateEntry(val updatedEntry: MoodEntry) : HistoryEvent()
+        data class DeleteEntry(val entryId: String) : HistoryEvent()
     }
 
-    //внутрішній стан, який можна змінювати
     private val _state = MutableStateFlow(HistoryState())
-
     val state: StateFlow<HistoryState> = _state.asStateFlow()
 
     init {
         loadMoodEntries()
-        observeRepositoryState()
+        observeRepository()
     }
 
-    private fun observeRepositoryState() {
+    private fun observeRepository() {
         viewModelScope.launch {
-            //спостереження за станом завантаження
-            MoodRepository.isLoading.collectLatest { isLoading ->
-                _state.value = _state.value.copy(isLoading = isLoading)
-            }
-        }
-
-        viewModelScope.launch {
-            // помилками
-            MoodRepository.error.collectLatest { error ->
-                _state.value = _state.value.copy(errorMessage = error)
-            }
-        }
-        //список усіх записів  та оновлення allEntries
-        viewModelScope.launch {
-
-            MoodRepository.moods.collectLatest { entries ->
+            repository.moods.collectLatest { entries ->
                 _state.value = _state.value.copy(
                     allEntries = entries,
                     filteredEntries = applyFilters(entries, _state.value.searchText, _state.value.selectedMood)
                 )
             }
         }
-    }
 
-    private fun loadMoodEntries() {
         viewModelScope.launch {
-            try {
-                //запит даних з API
-                MoodRepository.fetchMoodsFromApi()
-            } catch (e: Exception) {
-                Log.e("HistoryMoodViewModel", "Error loading data", e)
-                _state.value = _state.value.copy(
-                    errorMessage = "Помилка завантаження даних: ${e.message}",
-                    isLoading = false
-                )
+            repository.error.collectLatest { error ->
+                _state.value = _state.value.copy(errorMessage = error)
+            }
+        }
+
+        viewModelScope.launch {
+            repository.isLoading.collectLatest { isLoading ->
+                _state.value = _state.value.copy(isLoading = isLoading)
             }
         }
     }
 
-    //  Actions
+    private fun loadMoodEntries() {
+        // Дані автоматично оновлюються через Flow з бази даних
+    }
+
     private fun setSearchText(text: String) {
         _state.value = _state.value.copy(
             searchText = text,
@@ -129,68 +113,34 @@ class HistoryMoodViewModel : ViewModel() {
         )
     }
 
-    // вибір запису для редагування
     private fun selectEntry(entry: MoodEntry) {
         _state.value = _state.value.copy(
             selectedEntry = entry
         )
     }
 
-    // скасування редагування
     private fun cancelUpdate() {
         _state.value = _state.value.copy(
             selectedEntry = null
         )
     }
 
-    // оновлення запису настрою
     private fun updateEntry(updatedEntry: MoodEntry) {
         viewModelScope.launch {
             _state.value = _state.value.copy(isUpdating = true)
-
-            try {
-                MoodRepository.updateMoodEntry(updatedEntry)
-
-                _state.value = _state.value.copy(
-                    selectedEntry = null,
-                    isUpdating = false
-                )
-            } catch (e: Exception) {
-                _state.value = _state.value.copy(
-                    isUpdating = false,
-                    errorMessage = "Помилка оновлення запису: ${e.message}"
-                )
-            }
+            repository.updateMoodEntry(updatedEntry)
+            _state.value = _state.value.copy(
+                selectedEntry = null,
+                isUpdating = false
+            )
         }
     }
 
-    // видалення запису настрою
     private fun deleteEntry(entryId: String) {
         viewModelScope.launch {
-            try {
-                MoodRepository.deleteMoodEntry(entryId)
-            } catch (e: Exception) {
-                Log.e("HistoryMoodViewModel", "Error deleting mood entry", e)
-                _state.value = _state.value.copy(
-                    errorMessage = "Помилка видалення запису: ${e.message}"
-                )
-            }
-        }
-    }
-
-    private fun refreshData() {
-        viewModelScope.launch {
-            try {
-
-                val currentEntries = _state.value.allEntries.filter { it.moodImageResId.startsWith("local:") }
-
-                MoodRepository.fetchMoodsFromApi()
-
-            } catch (e: Exception) {
-                Log.e("HistoryMoodViewModel", "Error refreshing data", e)
-                _state.value = _state.value.copy(
-                    errorMessage = "Помилка оновлення даних: ${e.message}"
-                )
+            val entry = _state.value.allEntries.find { it.id == entryId }
+            entry?.let {
+                repository.deleteMoodEntry(it)
             }
         }
     }
@@ -206,11 +156,9 @@ class HistoryMoodViewModel : ViewModel() {
             is HistoryEvent.CancelUpdate -> cancelUpdate()
             is HistoryEvent.UpdateEntry -> updateEntry(event.updatedEntry)
             is HistoryEvent.DeleteEntry -> deleteEntry(event.entryId)
-            is HistoryEvent.RefreshData -> refreshData()
         }
     }
 
-    // Допоміжна функція для застосування фільтрів
     private fun applyFilters(entries: List<MoodEntry>, searchText: String, selectedMood: String): List<MoodEntry> {
         return entries.filter { entry ->
             val matchesActivity = searchText.isEmpty() ||

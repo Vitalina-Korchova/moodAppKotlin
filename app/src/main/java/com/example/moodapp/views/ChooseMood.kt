@@ -36,6 +36,8 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import android.annotation.SuppressLint
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import com.example.moodapp.utils.MoodDatabase
+import com.example.moodapp.viewModel.ChooseMoodViewModelFactory
 import com.example.moodapp.viewModel.HistoryMoodViewModel
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -44,8 +46,12 @@ import com.example.moodapp.viewModel.HistoryMoodViewModel
 fun ChooseMood(
     navController: NavController,
     windowSizeClass: WindowSizeClass,
-    viewModel: ChooseMoodViewModel= viewModel()
+    database: MoodDatabase
 ) {
+
+    val viewModel: ChooseMoodViewModel = viewModel(
+        factory = ChooseMoodViewModelFactory(database)
+    )
     val state by viewModel.state.collectAsState()
 
     val isTablet = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||

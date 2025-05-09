@@ -67,14 +67,20 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.moodapp.R
 import com.example.moodapp.model.MoodEntry
+import com.example.moodapp.utils.MoodDatabase
 import com.example.moodapp.viewModel.HistoryMoodViewModel
+import com.example.moodapp.viewModel.HistoryMoodViewModelFactory
 
 @Composable
 fun HistoryMood(
     navController: NavController,
     windowSizeClass: WindowSizeClass,
-    viewModel: HistoryMoodViewModel = viewModel()
+    database: MoodDatabase
 ) {
+    val viewModel: HistoryMoodViewModel = viewModel(
+        factory = HistoryMoodViewModelFactory(database)
+    )
+
     val state by viewModel.state.collectAsState()
     val rotationState by animateFloatAsState(
         targetValue = if (state.areFiltersExpanded) 180f else 0f,

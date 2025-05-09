@@ -34,6 +34,9 @@ import com.example.moodapp.views.SideNavigation
 class MainActivity : ComponentActivity() {
 
     private val TAG = "MainActivity"
+    private val database by lazy {
+        (applicationContext as MoodApp).database
+    }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,13 +73,13 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxHeight()
                         ) {
                             composable("choose_mood") {
-                                ChooseMood(navController, windowSizeClass)
+                                ChooseMood(navController, windowSizeClass, database)
                             }
                             composable("activities_mood") {
-                                ActivitiesMood(navController, windowSizeClass)
+                                ActivitiesMood(navController, windowSizeClass, database)
                             }
                             composable("history_mood") {
-                                HistoryMood(navController,windowSizeClass)
+                                HistoryMood(navController,windowSizeClass,database)
                             }
                             composable("signin_screen") {
                                 Authorization(navController, windowSizeClass)

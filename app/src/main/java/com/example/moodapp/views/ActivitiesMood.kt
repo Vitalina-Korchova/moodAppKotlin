@@ -39,6 +39,10 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import com.example.moodapp.repository.MoodRepository
+import com.example.moodapp.utils.MoodDatabase
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @SuppressLint("ContextCastToActivity")
@@ -46,9 +50,26 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 fun ActivitiesMood(
     navController: NavController,
     windowSizeClass: WindowSizeClass, // Передаємо WindowSizeClass
-    viewModel: ActivitiesMoodViewModel = viewModel()
+    database: MoodDatabase
 ) {
+    val repository = remember { MoodRepository(database) }
+
+    // Створюємо ViewModel
+    val viewModel = remember {
+        ActivitiesMoodViewModel(repository)
+    }
+
     val state by viewModel.state.collectAsState()
+
+    // Check if we have a current mood entry and initialize with its activities
+    LaunchedEffect(key1 = true) {
+        repository.getCurrentMoodEntry()?.let { entry ->
+            if (entry.activities.isNotEmpty()) {
+                viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.InitWithActivities(entry.activities))
+                Log.d("ActivitiesMood", "Initialized with activities: ${entry.activities}")
+            }
+        }
+    }
 
     // Адаптивність на основі WindowSizeClass
     val isTablet = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
@@ -90,6 +111,14 @@ fun ActivitiesMood(
                 .align(Alignment.CenterHorizontally)
         )
 
+        // Debug text to show selected activities
+        Text(
+            text = "Selected: ${state.selectedActivities.joinToString(", ")}",
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -117,6 +146,7 @@ fun ActivitiesMood(
                             .background(backgroundColor, shape = RoundedCornerShape(cornerRadius))
                             .clickable {
                                 viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.ActivityToggled(activity))
+                                Log.d("ActivitiesMood", "Activity clicked: $activity")
                             }
                             .padding(horizontal = activityPadding, vertical = activityPadding),
                         contentAlignment = Alignment.Center
@@ -135,7 +165,7 @@ fun ActivitiesMood(
         Button(
             onClick = {
                 viewModel.onEvent(ActivitiesMoodViewModel.ActivitiesEvent.SaveButtonClicked)
-                Log.d("ActivitiesMood", "Selected activities: ${state.selectedActivities}")
+                Log.d("ActivitiesMood", "Save button clicked. Selected activities: ${state.selectedActivities}")
             },
             modifier = Modifier
                 .width(buttonWidth)
