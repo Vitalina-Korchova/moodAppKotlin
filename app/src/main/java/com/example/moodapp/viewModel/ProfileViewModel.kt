@@ -1,4 +1,5 @@
-package com.example.moodapp.viewmodels
+// ProfileViewModel.kt
+package com.example.moodapp.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,54 +14,32 @@ import java.util.Locale
 data class UserProfileData(
     val username: String = "",
     val dateOfBirth: String = "",
-    val region: String = "Ukraine",
-    val language: String = "English",
-    val notificationsEnabled: Boolean = true
-)
-
-data class UserStatistics(
-    val moodsRecorded: Int = 0,
-    val streakDays: Int = 0,
-    val achievements: Int = 0
+    val region: String = "Ukraine"
 )
 
 data class ProfileUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val profileData: UserProfileData = UserProfileData(),
-    val statistics: UserStatistics = UserStatistics()
+    val profileData: UserProfileData = UserProfileData()
 )
 
-open class ProfileViewModel : ViewModel() {
-
+class ProfileViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
-    open val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
-
-    fun setLoadingState(loading: Boolean) {
-        _uiState.value = _uiState.value.copy(isLoading = loading)
-    }
-
-    fun showError(message: String) {
-        _uiState.value = _uiState.value.copy(errorMessage = message)
-    }
+    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     private val userRepository = UserRepository
 
     init {
         loadUserProfile()
-        loadUserStatistics()
     }
 
     private fun loadUserProfile() {
         viewModelScope.launch {
             try {
                 _uiState.value = _uiState.value.copy(isLoading = true)
-
-
                 val user = userRepository.getUser()
 
                 if (user != null) {
-
                     val formattedDate = try {
                         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                         val outputFormat = SimpleDateFormat("d MMMM yyyy", Locale.getDefault())
@@ -73,9 +52,7 @@ open class ProfileViewModel : ViewModel() {
                     val profileData = UserProfileData(
                         username = user.login,
                         dateOfBirth = formattedDate,
-                        region = "Ukraine",
-                        language = "English",
-                        notificationsEnabled = true
+                        region = "Ukraine"
                     )
 
                     _uiState.value = _uiState.value.copy(
@@ -97,32 +74,13 @@ open class ProfileViewModel : ViewModel() {
         }
     }
 
-    private fun loadUserStatistics() {
-        viewModelScope.launch {
-            try {
-
-                val stats = UserStatistics(
-                    moodsRecorded = 8,
-                    streakDays = 8,
-                    achievements = 5
-                )
-
-                _uiState.value = _uiState.value.copy(statistics = stats)
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    errorMessage = e.message ?: "Failed to load statistics"
-                )
-            }
-        }
-    }
-
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
     }
 
     fun logout() {
         viewModelScope.launch {
-
+            // Implement logout logic
         }
     }
 }

@@ -7,7 +7,7 @@ object RetrofitInstance {
     val api: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl("https://run.mocky.io/") // базова частина URL
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create()) //буде автоматично конвертовано з джсон
             .build()
             .create(ApiService::class.java)
     }

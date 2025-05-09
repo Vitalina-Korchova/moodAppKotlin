@@ -2,23 +2,14 @@ package com.example.moodapp
 
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasAnyAncestor
-import androidx.compose.ui.test.hasParent
-import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithContentDescription
-import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.printToLog
 import androidx.compose.ui.unit.DpSize
@@ -27,9 +18,9 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.compose.MoodAppTheme
-import com.example.moodapp.viewmodels.ProfileUiState
-import com.example.moodapp.viewmodels.ProfileViewModel
-import com.example.moodapp.viewmodels.UserProfileData
+import com.example.moodapp.viewModel.ProfileUiState
+import com.example.moodapp.viewModel.ProfileViewModel
+import com.example.moodapp.viewModel.UserProfileData
 import com.example.moodapp.viewmodels.UserStatistics
 import com.example.moodapp.views.Profile
 import kotlinx.coroutines.flow.MutableStateFlow

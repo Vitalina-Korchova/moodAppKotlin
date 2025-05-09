@@ -54,21 +54,21 @@ class HistoryMoodViewModel : ViewModel() {
 
     private fun observeRepositoryState() {
         viewModelScope.launch {
-            // Спостерігаємо за станом завантаження
+            //спостереження за станом завантаження
             MoodRepository.isLoading.collectLatest { isLoading ->
                 _state.value = _state.value.copy(isLoading = isLoading)
             }
         }
 
         viewModelScope.launch {
-            // Спостерігаємо за помилками
+            // помилками
             MoodRepository.error.collectLatest { error ->
                 _state.value = _state.value.copy(errorMessage = error)
             }
         }
-
+        //список усіх записів  та оновлення allEntries
         viewModelScope.launch {
-            // Спостерігаємо за даними настроїв
+
             MoodRepository.moods.collectLatest { entries ->
                 _state.value = _state.value.copy(
                     allEntries = entries,
@@ -81,7 +81,7 @@ class HistoryMoodViewModel : ViewModel() {
     private fun loadMoodEntries() {
         viewModelScope.launch {
             try {
-                // Запит даних з API
+                //запит даних з API
                 MoodRepository.fetchMoodsFromApi()
             } catch (e: Exception) {
                 Log.e("HistoryMoodViewModel", "Error loading data", e)
@@ -178,32 +178,14 @@ class HistoryMoodViewModel : ViewModel() {
         }
     }
 
-//    // оновлення даних з API
-//    private fun refreshData() {
-//        viewModelScope.launch {
-//            try {
-//                MoodRepository.fetchMoodsFromApi()
-//            } catch (e: Exception) {
-//                Log.e("HistoryMoodViewModel", "Error refreshing data", e)
-//                _state.value = _state.value.copy(
-//                    errorMessage = "Помилка оновлення даних: ${e.message}"
-//                )
-//            }
-//        }
-//    }
-
     private fun refreshData() {
         viewModelScope.launch {
             try {
-                // Instead of immediately replacing all data, consider merging with local entries
+
                 val currentEntries = _state.value.allEntries.filter { it.moodImageResId.startsWith("local:") }
 
-                // Fetch from API
                 MoodRepository.fetchMoodsFromApi()
 
-                // If you want to keep local entries that might not be in the API yet
-                // This would need to be implemented in the repository
-                // MoodRepository.ensureLocalEntriesPreserved(currentEntries)
             } catch (e: Exception) {
                 Log.e("HistoryMoodViewModel", "Error refreshing data", e)
                 _state.value = _state.value.copy(
