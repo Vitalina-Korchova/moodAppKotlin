@@ -21,10 +21,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.MoodAppTheme
-import com.example.moodapp.views.ActivitiesMood
 import com.example.moodapp.views.Authorization
 import com.example.moodapp.views.BottomNavigation
-import com.example.moodapp.views.ChooseMood
+import com.example.moodapp.views.ChooseActivitiesMood
 import com.example.moodapp.views.HistoryMood
 import com.example.moodapp.views.MoodTips
 import com.example.moodapp.views.Profile
@@ -72,12 +71,12 @@ class MainActivity : ComponentActivity() {
                                 .weight(1f)
                                 .fillMaxHeight()
                         ) {
-                            composable("choose_mood") {
-                                ChooseMood(navController, windowSizeClass, database)
-                            }
-                            composable("activities_mood") {
-                                ActivitiesMood(navController, windowSizeClass, database)
-                            }
+//                            composable("choose_mood") {
+//                                ChooseMood(navController, windowSizeClass, database)
+//                            }
+//                            composable("activities_mood") {
+//                                ActivitiesMood(navController, windowSizeClass, database)
+//                            }
                             composable("history_mood") {
                                 HistoryMood(navController,windowSizeClass,database)
                             }
@@ -92,6 +91,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("tips_mood"){
                                 MoodTips(windowSizeClass)
+                            }
+                            composable("choose_activities_mood"){
+                                ChooseActivitiesMood(navController, windowSizeClass, database)
                             }
                         }
                     }

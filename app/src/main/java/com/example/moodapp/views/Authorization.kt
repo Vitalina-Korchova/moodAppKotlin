@@ -83,7 +83,7 @@ fun Authorization(
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn) {
             Log.d("Authorization", "Успішний вхід, переходимо на choose_mood")
-            navController.navigate("choose_mood")
+            navController.navigate("choose_activities_mood")
         }
     }
 
