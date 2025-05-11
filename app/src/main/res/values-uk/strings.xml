@@ -69,4 +69,37 @@
     <string name="hist_no_found">Нічого не знайдено</string>
     <string name="hist_try_adjust">Спробуйте налаштувати фільтри пошуку</string>
     <string name="hist_no_activities">Немає запису про активність</string>
+
+    <string name="tip_title">Поради для настрою</string>
+    <string name="tip_title_meditation">Спробуйте медитацію</string>
+    <string name="tip_title_walk">Пройдіться на вулиці</string>
+    <string name="tip_title_friend">Поговоріть з другом</string>
+    <string name="tip_title_music">Послухайте улюблену музику</string>
+    <string name="tip_title_journal">Запишіть свої думки</string>
+    <string name="tip_title_breathing">Подихайте глибоко</string>
+    <string name="tip_title_water">Випийте склянку води</string>
+    <string name="tip_title_workout">Зробіть коротку розминку</string>
+    <string name="tip_title_comedy">Подивіться щось смішне</string>
+    <string name="tip_title_declutter">Приберіть у просторі</string>
+    <string name="tip_title_creative">Спробуйте творчу діяльність</string>
+    <string name="tip_title_social_media">Відпочиньте від соцмереж</string>
+    <string name="tip_title_kindness">Зробіть щось хороше для інших</string>
+    <string name="tip_title_scents">Запаліть свічку або використовуйте ефірні олії</string>
+    <string name="tip_title_reading">Прочитайте кілька сторінок книги</string>
+
+    <string name="tip_detail_meditation">Медитація - простий та потужний спосіб заспокоїти розум. Всього кілька хвилин концентрації на диханні можуть зменшити стрес та підвищити ясність думок.</string>
+    <string name="tip_detail_walk">Прогулянка на свіжому повітрі освіжає розум і тіло. Природа та свіже повітря можуть значно покращити ваш настрій.</string>
+    <string name="tip_detail_friend">Поділитися своїми почуттями з другом може бути неймовірно цілюще. Це допомагає відчути, що вас чують, підтримують і ви не самотні.</string>
+    <string name="tip_detail_music">Музика швидко змінює емоційний стан. Хороший плейлист може зарядити енергією або допомогти розслабитися.</string>
+    <string name="tip_detail_journal">Ведення щоденника дозволяє організувати думки та висловити емоції. Це чудовий спосіб для рефлексії та отримання ясності.</string>
+    <string name="tip_detail_breathing">Повільні, глибокі вдихи заспокійують нервову систему та допомагають зменшити тривогу.</string>
+    <string name="tip_detail_water">Гідратація впливає на настрій та енергію. Навіть одна склянка води може дати помітний ефект.</string>
+    <string name="tip_detail_workout">Фізична активність вивільняє ендорфіни, які покращують настрій. Навіть 5-хвилинна розминка допомагає.</string>
+    <string name="tip_detail_comedy">Сміх знімає напругу та підвищує рівень щастя. Короткий комедійний ролик може допомогти.</string>
+    <string name="tip_detail_declutter">Охайний простір сприяє ясності думок. Прибирання навіть невеликої зони може бути задовільним.</string>
+    <string name="tip_detail_creative">Малювання, рукоділля чи гра на музичному інструменті залучають ваш мозок до позитивної, усвідомленої діяльності.</string>
+    <string name="tip_detail_social_media">Відпочинок від соцмереж може зменшити порівняння з іншими та допомогти відчути себе більш присутнім у моменті.</string>
+    <string name="tip_detail_kindness">Добрі вчинки активізують центр задоволення у мозку та покращують настрій.</string>
+    <string name="tip_detail_scents">Заспокійливі аромати, такі як лаванда чи евкаліпт, допомагають розслабитися та відчути себе впевненіше.</string>
+    <string name="tip_detail_reading">Читання переносить ваш розум в інші місця, пропонуючи як відволікання, так і натхнення.</string>
 </resources>

@@ -38,25 +38,24 @@ fun MoodTips(windowSizeClass: WindowSizeClass) {
         val tipDetailText = view.findViewById<TextView>(R.id.tip_detail_text)
         val backButton = view.findViewById<ImageButton>(R.id.back_button)
 
-        // Set up RecyclerView properly
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         val moodTipsMap = mapOf(
-            "Try meditation" to "Meditation is a simple and powerful way to calm your mind. Just a few minutes of focused breathing can reduce stress and increase clarity.",
-            "Take a walk outside" to "Walking outdoors refreshes your mind and body. Nature and fresh air can significantly lift your mood.",
-            "Talk to a friend" to "Sharing your feelings with a friend can be incredibly healing. It helps you feel heard, supported, and less alone.",
-            "Listen to your favorite music" to "Music quickly shifts your emotional state. A good playlist can energize you or help you relax instantly.",
-            "Write down your thoughts" to "Journaling allows you to organize your thoughts and express emotions. It’s a great way to reflect and gain clarity.",
-            "Practice deep breathing" to "Taking slow, deep breaths calms your nervous system and helps reduce anxiety.",
-            "Drink a glass of water" to "Hydration impacts mood and energy. A simple glass of water can make a noticeable difference.",
-            "Do a quick workout" to "Physical activity releases endorphins that boost your mood. Even a 5-minute stretch helps.",
-            "Watch something funny" to "Laughter releases tension and increases happiness. A short comedy clip might do the trick.",
-            "Declutter your space" to "A tidy space promotes a clear mind. Cleaning even one small area can feel satisfying.",
-            "Try a creative activity" to "Drawing, crafting, or playing an instrument engages your brain in a positive, mindful way.",
-            "Disconnect from social media" to "Taking a break from scrolling can reduce comparison and help you feel more present.",
-            "Do something kind for someone" to "Acts of kindness activate the reward center in your brain and improve your mood.",
-            "Light a candle or use essential oils" to "Soothing scents like lavender or eucalyptus can help you relax and feel grounded.",
-            "Read a few pages of a book" to "Reading transports your mind elsewhere, offering both escape and inspiration."
+            R.string.tip_title_meditation to R.string.tip_detail_meditation,
+            R.string.tip_title_walk to R.string.tip_detail_walk,
+            R.string.tip_title_friend to R.string.tip_detail_friend,
+            R.string.tip_title_music to R.string.tip_detail_music,
+            R.string.tip_title_journal to R.string.tip_detail_journal,
+            R.string.tip_title_breathing to R.string.tip_detail_breathing,
+            R.string.tip_title_water to R.string.tip_detail_water,
+            R.string.tip_title_workout to R.string.tip_detail_workout,
+            R.string.tip_title_comedy to R.string.tip_detail_comedy,
+            R.string.tip_title_declutter to R.string.tip_detail_declutter,
+            R.string.tip_title_creative to R.string.tip_detail_creative,
+            R.string.tip_title_social_media to R.string.tip_detail_social_media,
+            R.string.tip_title_kindness to R.string.tip_detail_kindness,
+            R.string.tip_title_scents to R.string.tip_detail_scents,
+            R.string.tip_title_reading to R.string.tip_detail_reading
         )
 
         recyclerView.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -75,10 +74,12 @@ fun MoodTips(windowSizeClass: WindowSizeClass) {
             }
 
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+                val context = holder.itemView.context
                 val item = moodTipsMap.entries.elementAt(position)
-                (holder.itemView as android.widget.Button).text = item.key
+
+                (holder.itemView as android.widget.Button).text = context.getString(item.key)
                 holder.itemView.setOnClickListener {
-                    tipDetailText.text = item.value
+                    tipDetailText.text = context.getString(item.value)
                     flipper.displayedChild = 1
                 }
             }

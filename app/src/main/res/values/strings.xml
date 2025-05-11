@@ -70,5 +70,38 @@
     <string name="hist_try_adjust">Try adjusting your search filters</string>
     <string name="hist_no_activities">No activities recorded</string>
 
+    <string name="tip_title">Mood Tips</string>
+    <string name="tip_title_meditation">Try meditation</string>
+    <string name="tip_title_walk">Take a walk outside</string>
+    <string name="tip_title_friend">Talk to a friend</string>
+    <string name="tip_title_music">Listen to your favorite music</string>
+    <string name="tip_title_journal">Write down your thoughts</string>
+    <string name="tip_title_breathing">Practice deep breathing</string>
+    <string name="tip_title_water">Drink a glass of water</string>
+    <string name="tip_title_workout">Do a quick workout</string>
+    <string name="tip_title_comedy">Watch something funny</string>
+    <string name="tip_title_declutter">Declutter your space</string>
+    <string name="tip_title_creative">Try a creative activity</string>
+    <string name="tip_title_social_media">Disconnect from social media</string>
+    <string name="tip_title_kindness">Do something kind for someone</string>
+    <string name="tip_title_scents">Light a candle or use essential oils</string>
+    <string name="tip_title_reading">Read a few pages of a book</string>
+
+    <string name="tip_detail_meditation">Meditation is a simple and powerful way to calm your mind. Just a few minutes of focused breathing can reduce stress and increase clarity.</string>
+    <string name="tip_detail_walk">Walking outdoors refreshes your mind and body. Nature and fresh air can significantly lift your mood.</string>
+    <string name="tip_detail_friend">Sharing your feelings with a friend can be incredibly healing. It helps you feel heard, supported, and less alone.</string>
+    <string name="tip_detail_music">Music quickly shifts your emotional state. A good playlist can energize you or help you relax instantly.</string>
+    <string name="tip_detail_journal">Journaling allows you to organize your thoughts and express emotions. It\'s a great way to reflect and gain clarity.</string>
+    <string name="tip_detail_breathing">Taking slow, deep breaths calms your nervous system and helps reduce anxiety.</string>
+    <string name="tip_detail_water">Hydration impacts mood and energy. A simple glass of water can make a noticeable difference.</string>
+    <string name="tip_detail_workout">Physical activity releases endorphins that boost your mood. Even a 5-minute stretch helps.</string>
+    <string name="tip_detail_comedy">Laughter releases tension and increases happiness. A short comedy clip might do the trick.</string>
+    <string name="tip_detail_declutter">A tidy space promotes a clear mind. Cleaning even one small area can feel satisfying.</string>
+    <string name="tip_detail_creative">Drawing, crafting, or playing an instrument engages your brain in a positive, mindful way.</string>
+    <string name="tip_detail_social_media">Taking a break from scrolling can reduce comparison and help you feel more present.</string>
+    <string name="tip_detail_kindness">Acts of kindness activate the reward center in your brain and improve your mood.</string>
+    <string name="tip_detail_scents">Soothing scents like lavender or eucalyptus can help you relax and feel grounded.</string>
+    <string name="tip_detail_reading">Reading transports your mind elsewhere, offering both escape and inspiration.</string>
+
 
 </resources>
