@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Муд Ап</string>
+    <string name="auth_authorization">Авторизація</string>
+    <string name="auth_login">Логін</string>
+    <string name="auth_password">Пароль</string>
+    <string name="auth_sign_in">Увійти</string>
+    <string name="auth_create_account">Створити акаунт</string>
+    <string name="auth_sign_up">Зареєструватись</string>
+
+    <string name="reg_registration">Реєстрація</string>
+    <string name="reg_login">Логін</string>
+    <string name="reg_password">Пароль</string>
+    <string name="reg_date_birth">Дата народження</string>
+    <string name="reg_privacy_policy">Я приймаю Політику конфіденційності</string>
+    <string name="reg_sign_up">Зареєструватись</string>
+
+    <string name="chs_mood_question">Як ти сьогодні?</string>
+    <string name="chs_mood_icon_happy">Весело</string>
+    <string name="chs_mood_icon_good">Добре</string>
+    <string name="chs_mood_icon_neutral">Нейтрально</string>
+    <string name="chs_mood_icon_sad">Сумно</string>
+    <string name="chs_mood_icon_bad">Погано</string>
+    <string name="chs_mood_question_activities">Чим займались?</string>
+    <string name="chs_mood_activities_work">Робота</string>
+    <string name="chs_mood_activities_study">Освіта</string>
+    <string name="chs_mood_activities_exercise">Вправи</string>
+    <string name="chs_mood_activities_reading">Читання</string>
+    <string name="chs_mood_activities_family">Родина</string>
+    <string name="chs_mood_activities_cooking">Їжа</string>
+    <string name="chs_mood_activities_gaming">Ігри</string>
+    <string name="chs_mood_activities_meditation">Медитація</string>
+    <string name="chs_mood_activities_shopping">Покупки</string>
+    <string name="chs_mood_activities_cleaning">Прибирання</string>
+    <string name="chs_mood_activities_sleeping">Сон</string>
+    <string name="chs_mood_activities_watching_tv">Телевізор</string>
+    <string name="chs_mood_activities_traveling">Пригоди</string>
+    <string name="chs_mood_activities_music">Музика</string>
+    <string name="chs_mood_activities_art">Мистецтво</string>
+    <string name="chs_mood_activities_sport">Спорт</string>
+    <string name="chs_mood_save">Зберегти</string>
+
+</resources>

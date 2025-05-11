@@ -44,6 +44,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.ui.res.stringResource
+import com.example.moodapp.R
 import com.example.moodapp.utils.MoodDatabase
 import com.example.moodapp.viewModel.ChooseActivitiesMoodViewModel
 import com.example.moodapp.viewModel.ChooseActivitiesMoodViewModelFactory
@@ -103,7 +105,7 @@ fun ChooseActivitiesMood(
         ) {
             // Mood Section
             Text(
-                text = "How are you today?",
+                text = stringResource(R.string.chs_mood_question),
                 fontSize = titleFontSize,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = if (isTablet) 24.dp else 16.dp)
@@ -156,7 +158,7 @@ fun ChooseActivitiesMood(
                         Spacer(modifier = Modifier.height(if (isTablet) 8.dp else 4.dp))
 
                         Text(
-                            text = mood,
+                            stringResource(id = viewModel.getMoodResource(mood)),
                             fontSize = moodTextSize,
                             fontWeight = if (mood == state.selectedMood) FontWeight.Bold else FontWeight.Normal
                         )
@@ -168,7 +170,7 @@ fun ChooseActivitiesMood(
 
             // Activities Section
             Text(
-                text = "What have you been up to?",
+                text = stringResource(R.string.chs_mood_question_activities),
                 fontSize = subtitleFontSize,
                 fontWeight = FontWeight.Bold
             )
@@ -205,7 +207,7 @@ fun ChooseActivitiesMood(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = activity,
+                            text = stringResource(id = viewModel.getActivityResource(activity)),
                             fontSize = activityTextSize,
                             color = textColor,
                             fontWeight = FontWeight.Bold
@@ -240,7 +242,7 @@ fun ChooseActivitiesMood(
                     )
                 } else {
                     Text(
-                        text = "Save",
+                        text = stringResource(R.string.chs_mood_save),
                         fontSize = buttonTextSize,
                         modifier = Modifier.padding(vertical = if (isTablet) 8.dp else 4.dp)
                     )

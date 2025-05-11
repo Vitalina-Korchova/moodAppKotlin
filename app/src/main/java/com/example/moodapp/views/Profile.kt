@@ -140,8 +140,14 @@ fun Profile(
             SettingItem(
                 icon = Icons.Default.LocationOn,
                 title = "Language",
-                value = settingsState.appLanguage,
-                onClick = { /* Handle language selection */ },
+                value = when(settingsState.appLanguage) {
+                    "uk" -> "Українська"
+                    else -> "English"
+                },
+                onClick = {
+                    val newLanguage = if (settingsState.appLanguage == "en") "uk" else "en"
+                    settingsViewModel.setAppLanguage(context, newLanguage)
+                },
                 isWideScreen = isWideScreen
             )
         }

@@ -1,5 +1,6 @@
 package com.example.moodapp.viewModel
 
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 data class AppSettings(
     val notificationsEnabled: Boolean = true,
@@ -63,11 +65,38 @@ class SettingsViewModel(private val dataStore: DataStore<Preferences>) : ViewMod
         }
     }
 
-    fun setAppLanguage(language: String) {
+    //for 2 langs!!!!
+    fun setAppLanguage(context: Context, languageCode: String) {
         viewModelScope.launch {
+            // Зберегти вибір мови
             dataStore.edit { preferences ->
-                preferences[LANGUAGE_KEY] = language
+                preferences[LANGUAGE_KEY] = languageCode
+            }
+
+            // Оновити локаль додатка
+            updateLocale(context, languageCode)
+        }
+    }
+
+    fun initializeLanguage(context: Context) {
+        viewModelScope.launch {
+            dataStore.data.collect { preferences ->
+                preferences[LANGUAGE_KEY]?.let { lang ->
+                    if (lang.isNotEmpty()) {
+                        updateLocale(context, lang)
+                    }
+                }
             }
         }
+    }
+
+    private fun updateLocale(context: Context, languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+
+        val resources = context.resources
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 }

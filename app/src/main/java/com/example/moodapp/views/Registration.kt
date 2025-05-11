@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -53,7 +54,7 @@ fun Registration(
     }
 
     val buttonWidth = when (windowSizeClass.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> 150.dp
+        WindowWidthSizeClass.Compact -> 240.dp
         WindowWidthSizeClass.Medium -> 200.dp
         WindowWidthSizeClass.Expanded -> 250.dp
         else -> 150.dp
@@ -134,7 +135,7 @@ fun Registration(
         )
 
         Text(
-            text = "Registration",
+            text = stringResource(R.string.reg_registration),
             style = titleStyle,
             modifier = Modifier.padding(bottom = 24.dp)
         )
@@ -142,7 +143,7 @@ fun Registration(
         OutlinedTextField(
             value = login,
             onValueChange = { viewModel.onLoginChanged(it) },
-            label = { Text("Login", fontSize = labelFontSize) },
+            label = { Text(stringResource(R.string.reg_login), fontSize = labelFontSize) },
             textStyle = TextStyle(fontSize = textFontSize),
             modifier = Modifier
                 .width(textFieldWidth)
@@ -154,7 +155,7 @@ fun Registration(
         OutlinedTextField(
             value = password,
             onValueChange = { viewModel.onPasswordChanged(it) },
-            label = { Text("Password", fontSize = labelFontSize) },
+            label = { Text(stringResource(R.string.reg_password), fontSize = labelFontSize) },
             textStyle = TextStyle(fontSize = textFontSize),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -168,7 +169,7 @@ fun Registration(
         OutlinedTextField(
             value = dateOfBirth,
             onValueChange = { viewModel.onDateOfBirthChanged(it) },
-            label = { Text("Date of Birth", fontSize = labelFontSize) },
+            label = { Text(stringResource(R.string.reg_date_birth), fontSize = labelFontSize) },
             textStyle = TextStyle(fontSize = textFontSize),
             modifier = Modifier
                 .width(textFieldWidth)
@@ -200,7 +201,7 @@ fun Registration(
                     )
                 )
                 Text(
-                    text = "I accept the Privacy Policy",
+                    text = stringResource(R.string.reg_privacy_policy),
                     fontSize = textFontSize,
                     modifier = Modifier.padding(start = 4.dp)
                 )
@@ -222,7 +223,7 @@ fun Registration(
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ),
         ) {
-            Text("Sign Up", fontSize = buttonFontSize)
+            Text(stringResource(R.string.reg_sign_up), fontSize = buttonFontSize)
         }
     }
 }

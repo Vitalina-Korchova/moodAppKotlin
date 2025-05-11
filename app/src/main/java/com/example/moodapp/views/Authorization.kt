@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -116,7 +117,7 @@ fun Authorization(
         )
 
         Text(
-            text = "Authorization",
+            text = stringResource(R.string.auth_authorization),
             style = titleFontSize,
             modifier = Modifier.padding(bottom = 24.dp)
         )
@@ -124,7 +125,7 @@ fun Authorization(
         OutlinedTextField(
             value = login,
             onValueChange = { viewModel.onLoginChanged(it) },
-            label = { Text("Login") },
+            label = { Text(stringResource(R.string.auth_login)) },
             modifier = Modifier
                 .width(textFieldWidth)
                 .padding(bottom = 10.dp),
@@ -135,7 +136,7 @@ fun Authorization(
         OutlinedTextField(
             value = password,
             onValueChange = { viewModel.onPasswordChanged(it) },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.auth_password)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier
@@ -160,7 +161,7 @@ fun Authorization(
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ),
         ) {
-            Text("Sign In", fontSize = fontSize)
+            Text(stringResource(R.string.auth_sign_in), fontSize = fontSize)
         }
 
         Row(
@@ -169,12 +170,12 @@ fun Authorization(
             modifier = Modifier.padding(top = 16.dp)
         ) {
             Text(
-                text = "Create Account",
+                text = stringResource(R.string.auth_create_account),
                 fontSize = fontSize * 0.7f,
             )
 
             TextButton(onClick = { navController.navigate("signup_screen") }) {
-                Text("Sign up", fontSize = fontSize * 0.75f)
+                Text(stringResource(R.string.auth_sign_up), fontSize = fontSize * 0.75f)
             }
         }
     }

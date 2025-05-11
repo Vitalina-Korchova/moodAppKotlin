@@ -15,7 +15,9 @@ import java.util.Locale
 import com.example.moodapp.R
 
 class ChooseActivitiesMoodViewModel(
-    private val repository: MoodRepository
+    private val repository: MoodRepository,
+    private val moodStringResources: Map<String, Int>,
+    private val activityStringResources: Map<String, Int>
 ) : ViewModel() {
 
     // State for the combined screen
@@ -30,10 +32,10 @@ class ChooseActivitiesMoodViewModel(
 
         // Initialize activities
         val activities = listOf(
-            "Work", "Study", "Exercise", "Reading", "Socializing",
+            "Work", "Study", "Exercise", "Reading",
             "Family", "Cooking", "Gaming", "Meditation", "Shopping",
-            "Cleaning", "Sleeping", "Watching TV", "Traveling", "Nature",
-            "Music", "Art", "Pet care", "Gardening", "Sports"
+            "Cleaning", "Sleeping", "Watching TV", "Traveling",
+            "Music", "Art","Sports"
         )
         _state.update { it.copy(allActivities = activities) }
 
@@ -68,6 +70,7 @@ class ChooseActivitiesMoodViewModel(
         val isSaving: Boolean = false,
         val error: String? = null
     )
+
 
     // Handle events
     fun onEvent(event: CombinedEvent) {
@@ -144,4 +147,7 @@ class ChooseActivitiesMoodViewModel(
             }
         }
     }
+
+    fun getMoodResource(mood: String): Int = moodStringResources[mood] ?: 0
+    fun getActivityResource(activity: String): Int = activityStringResources[activity] ?: 0
 }
