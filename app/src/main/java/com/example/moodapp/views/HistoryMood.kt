@@ -531,6 +531,17 @@ fun MoodCard(
 ) {
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
+     fun getMoodImageResource(mood: String): Int {
+        return when (mood) {
+            "Happy" -> R.drawable.icon_happy_mood
+            "Good" -> R.drawable.icon_good_mood
+            "Neutral" -> R.drawable.icon_neutral_mood
+            "Sad" -> R.drawable.icon_sad_mood
+            "Bad" -> R.drawable.icon_bad_mood
+            else -> R.drawable.icon_neutral_mood
+        }
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -593,40 +604,11 @@ fun MoodCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                // Mood image - handles both URL, local resource, and local prefix
-                when {
-                    entry.moodImageResId.startsWith("http") -> {
-                        // URL image with Coil
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(entry.moodImageResId)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = "Mood: ${entry.mood}",
-                            modifier = Modifier.size(48.dp),
-                        )
-                    }
-                    entry.moodImageResId.startsWith("local:") -> {
-                        // Handle local resource with prefix
-
-                            val resourceId = entry.moodImageResId.substring("local:".length).toInt()
-                            Image(
-                                painter = painterResource(id = resourceId),
-                                contentDescription = "Mood: ${entry.mood}",
-                                modifier = Modifier.size(48.dp)
-                            )
-
-                    }
-                    else -> {
-
-                            Image(
-                                painter = painterResource(id = entry.moodImageResId.toInt()),
-                                contentDescription = "Mood: ${entry.mood}",
-                                modifier = Modifier.size(48.dp)
-                            )
-
-                    }
-                }
+                Image(
+                    painter = painterResource(id = getMoodImageResource(entry.mood)),
+                    contentDescription = "Mood: ${entry.mood}",
+                    modifier = Modifier.size(48.dp)
+                )
 
                 Text(
                     text = entry.mood,
