@@ -57,6 +57,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -112,7 +113,7 @@ fun HistoryMood(
                             .padding(end = 16.dp)
                     ) {
                         Text(
-                            text = "Your Mood History",
+                            text = stringResource(R.string.hist_title),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 16.dp)
@@ -136,7 +137,7 @@ fun HistoryMood(
                             ) {
                                 // On wider screens, we always show the filters expanded
                                 Text(
-                                    text = "Search Filters",
+                                    text = stringResource(R.string.hist_desc_search_fil),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Medium,
                                     modifier = Modifier.padding(bottom = 12.dp)
@@ -152,7 +153,7 @@ fun HistoryMood(
                                         onValueChange = { text ->
                                             viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.SearchTextChanged(text))
                                         },
-                                        label = { Text("Search activities") },
+                                        label = { Text(stringResource(R.string.hist_input_desc_serach_activ)) },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .background(MaterialTheme.colorScheme.onPrimary)
@@ -179,7 +180,7 @@ fun HistoryMood(
                                         OutlinedTextField(
                                             value = state.selectedMood,
                                             onValueChange = { },
-                                            label = { Text("Select mood") },
+                                            label = { Text(stringResource(R.string.hist_input_desc_select_mood)) },
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .background(MaterialTheme.colorScheme.onPrimary),
@@ -230,7 +231,7 @@ fun HistoryMood(
                                         ),
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        Text("Clear Filters")
+                                        Text(stringResource(R.string.hist_clear_filt))
                                     }
                                 }
                             }
@@ -255,12 +256,12 @@ fun HistoryMood(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Text(
-                                        text = "No entries found",
+                                        text = stringResource(R.string.hist_no_found),
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.Medium
                                     )
                                     Text(
-                                        text = "Try adjusting your search filters",
+                                        text = stringResource(R.string.hist_try_adjust),
                                         fontSize = 14.sp,
                                         color = Color.Gray,
                                         modifier = Modifier.padding(top = 8.dp)
@@ -275,7 +276,7 @@ fun HistoryMood(
                                         ),
                                         modifier = Modifier.padding(top = 16.dp)
                                     ) {
-                                        Text("Clear Filters")
+                                        Text(stringResource(R.string.hist_clear_filt))
                                     }
                                 }
                             }
@@ -306,7 +307,7 @@ fun HistoryMood(
                 // Single column layout for narrower screens (original layout)
                 Column {
                     Text(
-                        text = "Your Mood History",
+                        text = stringResource(R.string.hist_title),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp)
@@ -337,7 +338,7 @@ fun HistoryMood(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Search Filters",
+                                    text = stringResource(R.string.hist_desc_search_fil),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -366,7 +367,7 @@ fun HistoryMood(
                                         onValueChange = { text ->
                                             viewModel.onEvent(HistoryMoodViewModel.HistoryEvent.SearchTextChanged(text))
                                         },
-                                        label = { Text("Search activities") },
+                                        label = { Text(stringResource(R.string.hist_input_desc_serach_activ)) },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .background(MaterialTheme.colorScheme.onPrimary)
@@ -393,7 +394,7 @@ fun HistoryMood(
                                         OutlinedTextField(
                                             value = state.selectedMood,
                                             onValueChange = { },
-                                            label = { Text("Select mood") },
+                                            label = { Text(stringResource(R.string.hist_input_desc_select_mood)) },
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .background(MaterialTheme.colorScheme.onPrimary),
@@ -444,7 +445,7 @@ fun HistoryMood(
                                         ),
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        Text("Clear Filters")
+                                        Text(stringResource(R.string.hist_clear_filt))
                                     }
                                 }
                             }
@@ -462,12 +463,12 @@ fun HistoryMood(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "No entries found",
+                                    text = stringResource(R.string.hist_no_found),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Medium
                                 )
                                 Text(
-                                    text = "Try adjusting your search filters",
+                                    text = stringResource(R.string.hist_try_adjust),
                                     fontSize = 14.sp,
                                     color = Color.Gray,
                                     modifier = Modifier.padding(top = 8.dp)
@@ -483,7 +484,7 @@ fun HistoryMood(
                                     ),
                                     modifier = Modifier.padding(top = 16.dp)
                                 ) {
-                                    Text("Clear Filters")
+                                    Text(stringResource(R.string.hist_clear_filt))
                                 }
                             }
                         }
@@ -637,7 +638,7 @@ fun MoodCard(
 
             // Activities area
             Text(
-                text = "Activities:",
+                text = stringResource(R.string.hist_activities),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(top = 12.dp, bottom = 8.dp)
@@ -645,7 +646,7 @@ fun MoodCard(
 
             if (entry.activities.isEmpty()) {
                 Text(
-                    text = "No activities recorded",
+                    text = stringResource(R.string.hist_no_activities),
                     fontSize = 12.sp,
                     color = Color.Gray,
                     modifier = Modifier.padding(vertical = 8.dp)
@@ -687,8 +688,8 @@ fun MoodCard(
     if (showDeleteConfirmation) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text("Delete Mood Entry") },
-            text = { Text("Are you sure you want to delete this mood entry? This action cannot be undone.") },
+            title = { Text(stringResource(R.string.hist_delete_title)) },
+            text = { Text(stringResource(R.string.hist_delete_desc)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -696,14 +697,14 @@ fun MoodCard(
                         showDeleteConfirmation = false
                     }
                 ) {
-                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.hist_delete_button), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDeleteConfirmation = false }
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.hist_cancel))
                 }
             }
         )
@@ -735,7 +736,7 @@ fun EditMoodDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit Mood Entry") },
+        title = { Text(stringResource(R.string.hist_edit_mood_title)) },
         text = {
             Column(
                 modifier = Modifier
@@ -743,13 +744,13 @@ fun EditMoodDialog(
                     .padding(top = 8.dp)
             ) {
                 Text(
-                    text = "Date: ${entry.date}",
+                    text = "${stringResource(R.string.hist_date)} ${entry.date}",
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
                 // Mood selection
                 Text(
-                    text = "Select Mood:",
+                    text = stringResource(R.string.hist_input_desc_select_mood),
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -806,7 +807,7 @@ fun EditMoodDialog(
 
                 // Activities input
                 Text(
-                    text = "Activities (comma separated):",
+                    text = stringResource(R.string.hist_activities_input_arr),
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -836,12 +837,12 @@ fun EditMoodDialog(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Text("Update")
+                Text(stringResource(R.string.hist_edit_update))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.hist_cancel))
             }
         }
     )

@@ -17,7 +17,7 @@
     <string name="chs_mood_question">Як ти сьогодні?</string>
     <string name="chs_mood_icon_happy">Весело</string>
     <string name="chs_mood_icon_good">Добре</string>
-    <string name="chs_mood_icon_neutral">Нейтрально</string>
+    <string name="chs_mood_icon_neutral">Норма</string>
     <string name="chs_mood_icon_sad">Сумно</string>
     <string name="chs_mood_icon_bad">Погано</string>
     <string name="chs_mood_question_activities">Чим займались?</string>
@@ -39,4 +39,34 @@
     <string name="chs_mood_activities_sport">Спорт</string>
     <string name="chs_mood_save">Зберегти</string>
 
+    <string name="prof_date_birth">Дата народження</string>
+    <string name="prof_settings">Налаштування</string>
+    <string name="prof_notifications">Сповіщення</string>
+    <string name="prof_sounds">Звуки</string>
+    <string name="prof_language">Мова</string>
+    <string name="prof_log_out">Вийти</string>
+
+    <string name="hist_title">Ваша історія настроїв</string>
+    <string name="hist_desc_search_fil">Фільтри пошуку</string>
+    <string name="hist_input_desc_serach_activ">Пошук активностей</string>
+    <string name="hist_input_desc_select_mood">Обрати настрій</string>
+    <string name="hist_all_moods">Всі</string>
+    <string name="hist_happy_mood">Весело</string>
+    <string name="hist_good_mood">Добре</string>
+    <string name="hist_neutral_mood">Норма</string>
+    <string name="hist_sad_mood">Сумно</string>
+    <string name="hist_bad_mood">Погано</string>
+    <string name="hist_clear_filt">Очистити фільтри</string>
+    <string name="hist_activities">Активності:</string>
+    <string name="hist_edit_mood_title">Оновити настрій</string>
+    <string name="hist_date">Дата:</string>
+    <string name="hist_activities_input_arr">Активності (через кому на англ):</string>
+    <string name="hist_cancel">Скасувати</string>
+    <string name="hist_edit_update">Оновити</string>
+    <string name="hist_delete_title">Видалити настрій</string>
+    <string name="hist_delete_desc">Ви впевнені, що хочете видалити цей запис про настрій? Цю дію не можна скасувати.</string>
+    <string name="hist_delete_button">Видалити</string>
+    <string name="hist_no_found">Нічого не знайдено</string>
+    <string name="hist_try_adjust">Спробуйте налаштувати фільтри пошуку</string>
+    <string name="hist_no_activities">Немає запису про активність</string>
 </resources>

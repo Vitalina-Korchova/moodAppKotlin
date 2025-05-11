@@ -24,6 +24,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.example.moodapp.viewModel.ProfileViewModel
 import com.example.moodapp.viewModel.SettingsViewModel
 import com.example.moodapp.viewModel.SettingsViewModelFactory
@@ -99,7 +100,7 @@ fun Profile(
             )
 
             Text(
-                text = "Date of Birth: ${profileState.profileData.dateOfBirth}",
+                text = "${stringResource(R.string.prof_date_birth)} ${profileState.profileData.dateOfBirth}",
                 fontSize = if (isWideScreen) 20.sp else 16.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -112,7 +113,7 @@ fun Profile(
                 .padding(vertical = if (isWideScreen) 20.dp else 16.dp)
         ) {
             Text(
-                text = "App Settings",
+                text = stringResource(R.string.prof_settings),
                 fontSize = if (isWideScreen) 22.sp else 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = if (isWideScreen) 20.dp else 8.dp)
@@ -121,7 +122,7 @@ fun Profile(
             // Notification Setting
             SettingSwitchItem(
                 icon = Icons.Default.Notifications,
-                title = "Notifications",
+                title = stringResource(R.string.prof_notifications),
                 isChecked = settingsState.notificationsEnabled,
                 onCheckedChange = { settingsViewModel.toggleNotifications(it) },
                 isWideScreen = isWideScreen
@@ -130,7 +131,7 @@ fun Profile(
             // Sounds Setting
             SettingSwitchItem(
                 icon = Icons.Default.Phone,
-                title = "Sounds",
+                title = stringResource(R.string.prof_sounds),
                 isChecked = settingsState.soundsEnabled,
                 onCheckedChange = { settingsViewModel.toggleSounds(it) },
                 isWideScreen = isWideScreen
@@ -139,7 +140,7 @@ fun Profile(
             // Language Setting
             SettingItem(
                 icon = Icons.Default.LocationOn,
-                title = "Language",
+                title = stringResource(R.string.prof_language),
                 value = when(settingsState.appLanguage) {
                     "uk" -> "Українська"
                     else -> "English"
@@ -177,7 +178,7 @@ fun Profile(
                     .size(if (isWideScreen) 24.dp else 20.dp)
             )
             Text(
-                text = "Log Out",
+                text = stringResource(R.string.prof_log_out),
                 fontSize = if (isWideScreen) 20.sp else 16.sp
             )
         }

@@ -39,4 +39,36 @@
     <string name="chs_mood_activities_sport">Sport</string>
     <string name="chs_mood_save">Save</string>
 
+    <string name="prof_date_birth">Date of Birth</string>
+    <string name="prof_settings">App Settings</string>
+    <string name="prof_notifications">Notifications</string>
+    <string name="prof_sounds">Sounds</string>
+    <string name="prof_language">Language</string>
+    <string name="prof_log_out">Log Out</string>
+
+    <string name="hist_title">Your Mood History</string>
+    <string name="hist_desc_search_fil">Search Filters</string>
+    <string name="hist_input_desc_serach_activ">Search activities</string>
+    <string name="hist_input_desc_select_mood">Select Mood</string>
+    <string name="hist_all_moods">All</string>
+    <string name="hist_happy_mood">Happy</string>
+    <string name="hist_good_mood">Good</string>
+    <string name="hist_neutral_mood">Neutral</string>
+    <string name="hist_sad_mood">Sad</string>
+    <string name="hist_bad_mood">Bad</string>
+    <string name="hist_clear_filt">Clear Filters</string>
+    <string name="hist_activities">Activities:</string>
+    <string name="hist_edit_mood_title">Edit Mood Entry</string>
+    <string name="hist_date">Date:</string>
+    <string name="hist_activities_input_arr">Activities (comma separated):</string>
+    <string name="hist_cancel">Cancel</string>
+    <string name="hist_edit_update">Update</string>
+    <string name="hist_delete_title">Delete Mood Entry</string>
+    <string name="hist_delete_desc">Are you sure you want to delete this mood entry? This action cannot be undone.</string>
+    <string name="hist_delete_button">Delete</string>
+    <string name="hist_no_found">No entries found</string>
+    <string name="hist_try_adjust">Try adjusting your search filters</string>
+    <string name="hist_no_activities">No activities recorded</string>
+
+
 </resources>
